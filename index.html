@@ -177,13 +177,17 @@
 
     header.top {
       position: sticky;
-      top: 0;
+      top: 14px;
       z-index: 40;
+      width: min(920px, 92vw);
+      margin: 0 auto;
       background: color-mix(in srgb, var(--paper) 55%, transparent);
       backdrop-filter: blur(24px) saturate(180%);
       -webkit-backdrop-filter: blur(24px) saturate(180%);
-      border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
-      box-shadow: 0 1px 0 color-mix(in srgb, var(--ink) 4%, transparent), 0 8px 24px -12px color-mix(in srgb, var(--ink) 15%, transparent);
+      border: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
+      border-radius: 999px;
+      box-shadow: 0 1px 0 color-mix(in srgb, var(--ink) 4%, transparent), 0 14px 34px -14px color-mix(in srgb, var(--ink) 22%, transparent);
+      transition: box-shadow .3s ease, background .25s ease, top .25s ease;
     }
 
     @supports not (backdrop-filter: blur(1px)) {
@@ -196,9 +200,23 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 18px 5vw;
-      max-width: 1080px;
-      margin: 0 auto;
+      padding: 10px 10px 10px 24px;
+      max-width: none;
+      margin: 0;
+    }
+
+    @media (max-width: 860px) {
+      header.top {
+        top: 10px;
+        width: min(94vw, 460px);
+        border-radius: 999px;
+      }
+
+      .nav {
+        padding: 8px 10px 8px 20px;
+        justify-content: center;
+        gap: 14px;
+      }
     }
 
     .logo {
@@ -1147,13 +1165,8 @@
     }
 
     @keyframes fi-scroll {
-      from {
-        transform: translate3d(0, 0, 0);
-      }
-
-      to {
-        transform: translate3d(var(--fi-shift, -50%), 0, 0);
-      }
+      from { transform: translate3d(0, 0, 0); }
+      to   { transform: translate3d(var(--fi-shift, -50%), 0, 0); }
     }
 
     .fi-slide {
@@ -1165,13 +1178,12 @@
       overflow: hidden;
       border: 1px solid color-mix(in srgb, var(--line) 55%, transparent);
       box-shadow: 0 1px 0 var(--glass-spec) inset, 0 14px 30px -18px var(--glass-shadow);
-      transition: transform .4s cubic-bezier(.16, 1, .3, 1), box-shadow .4s ease;
+      transition: transform .45s cubic-bezier(.16, 1, .3, 1), box-shadow .45s cubic-bezier(.16, 1, .3, 1);
     }
 
     .fi-slide:hover {
       transform: translateY(-2px) scale(1.04) translateZ(0);
       box-shadow: 0 1px 0 var(--glass-spec) inset, 0 22px 40px -18px var(--glass-shadow);
-      z-index: 2;
     }
 
     .fi-slide img {
@@ -1181,8 +1193,7 @@
       height: 100%;
       object-fit: cover;
       filter: grayscale(1) contrast(1.08) brightness(.94) saturate(1);
-      transform: scale(1.001) translateZ(0);
-      transition: filter .6s ease, transform .6s cubic-bezier(.16, 1, .3, 1);
+      transition: filter .45s cubic-bezier(.16, 1, .3, 1);
     }
 
     .fi-slide:hover img {
@@ -1226,32 +1237,103 @@
     }
 
     @media (max-width: 900px) {
-      .fi-slide {
-        width: clamp(150px, 34vw, 210px);
-      }
+      .fi-slide { width: clamp(150px, 34vw, 210px); }
     }
 
     @media (max-width: 560px) {
-      .fi-slide {
-        width: 68vw;
-      }
-
-      .fi-viewport {
-        -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 2%, #000 96%, transparent 100%);
-        mask-image: linear-gradient(90deg, transparent 0, #000 2%, #000 96%, transparent 100%);
-      }
+      .fi-slide { width: 68vw; }
+      .fi-viewport { -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 2%, #000 96%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 2%, #000 96%, transparent 100%); }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .fi-track.autoplay {
-        animation: none;
+      .fi-track.autoplay { animation: none; }
+      .fi-slide, .fi-slide img, .fi-slide .fi-sheen { transition: none; }
+    }
+
+    /* ============================================================
+       MOBILE SIDE RAIL — scroll-position indicator, replaces the
+       hidden .navlinks on small screens. Desktop keeps the floating
+       pill topbar and never shows this.
+       ============================================================ */
+    .side-rail {
+      display: none;
+    }
+
+    @media (max-width: 860px) {
+      .side-rail {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        position: fixed;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 45;
       }
 
-      .fi-slide,
-      .fi-slide img,
-      .fi-slide .fi-sheen {
-        transition: none;
+      .side-rail::before {
+        content: '';
+        position: absolute;
+        left: 3px;
+        top: 4px;
+        bottom: 4px;
+        width: 1px;
+        background: color-mix(in srgb, var(--line) 65%, transparent);
+        z-index: -1;
       }
+
+      .rail-dot {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .rail-tick {
+        flex: 0 0 auto;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--paper);
+        border: 1px solid color-mix(in srgb, var(--muted) 70%, transparent);
+        transition: background .25s ease, transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+      }
+
+      .rail-label {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        color: var(--ink);
+        background: color-mix(in srgb, var(--paper) 78%, transparent);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid color-mix(in srgb, var(--line) 55%, transparent);
+        padding: 4px 10px;
+        border-radius: 999px;
+        white-space: nowrap;
+        opacity: 0;
+        transform: translateX(-6px);
+        transition: opacity .25s ease, transform .25s ease;
+        pointer-events: none;
+      }
+
+      .rail-dot.active .rail-tick {
+        background: var(--green-bright);
+        border-color: var(--green-bright);
+        transform: scale(1.4);
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--green-bright) 22%, transparent);
+      }
+
+      .rail-dot.active .rail-label {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @media (max-width: 860px) and (prefers-reduced-motion: reduce) {
+      .rail-tick, .rail-label { transition: none; }
     }
   </style>
 </head>
@@ -1285,6 +1367,17 @@
       </div>
     </nav>
   </header>
+
+  <nav class="side-rail" aria-label="Section navigation">
+    <a href="#about" class="rail-dot"><span class="rail-tick"></span><span class="rail-label">About</span></a>
+    <a href="#experience" class="rail-dot"><span class="rail-tick"></span><span class="rail-label">Experience</span></a>
+    <a href="#education" class="rail-dot"><span class="rail-tick"></span><span class="rail-label">Education</span></a>
+    <a href="#leadership" class="rail-dot"><span class="rail-tick"></span><span class="rail-label">Leadership</span></a>
+    <a href="#honors" class="rail-dot"><span class="rail-tick"></span><span class="rail-label">Honors</span></a>
+    <a href="#certifications" class="rail-dot"><span class="rail-tick"></span><span class="rail-label">Certifications</span></a>
+    <a href="#skills" class="rail-dot"><span class="rail-tick"></span><span class="rail-label">Skills</span></a>
+    <a href="#contact" class="rail-dot"><span class="rail-tick"></span><span class="rail-label">Contact</span></a>
+  </nav>
 
   <main id="top">
 
@@ -1332,47 +1425,33 @@
             </div>
           </div>
 
-          <div class="fi-viewport" id="fiViewport" role="group" aria-roledescription="carousel"
-            aria-label="Football inspiration photographs, auto-scrolling">
-            <div class="fi-track autoplay" id="fiTrack" style="--fi-duration:30s;">
-              
-              <figure class="fi-slide"><span class="fi-sheen"></span><img src="assets/football/messi-01.jpg"
-                  loading="lazy"></figure>
-              <figure class="fi-slide"><span class="fi-sheen"></span><img src="assets/football/messi-02.jpg"
-                  loading="lazy"></figure>
-              <figure class="fi-slide"><span class="fi-sheen"></span><img src="assets/football/argentina-01.jpg"
-                  loading="lazy"></figure>
-              <figure class="fi-slide"><span class="fi-sheen"></span><img src="assets/football/messi-03.jpg"
-                  loading="lazy"></figure>
-              <figure class="fi-slide"><span class="fi-sheen"></span><img src="assets/football/argentina-02.jpg"
-                  loading="lazy"></figure>
-              <figure class="fi-slide"><span class="fi-sheen"></span><img src="assets/football/messi-04.jpg"
-                  loading="lazy"></figure>
-              <figure class="fi-slide"><span class="fi-sheen"></span><img src="assets/football/argentina-03.jpg"
-                  loading="lazy"></figure>
-              <figure class="fi-slide"><span class="fi-sheen"></span><img src="assets/football/argentina-04.jpg"
-                  loading="lazy"></figure>
-              <figure class="fi-slide"><span class="fi-sheen"></span><img src="assets/football/argentina-05.jpg"
-                  loading="lazy"></figure>
+          <div class="fi-viewport" id="fiViewport" role="group" aria-roledescription="carousel" aria-label="Football inspiration photographs, auto-scrolling">
+            <div class="fi-track autoplay" id="fiTrack" style="--fi-duration:20s;">
+              <!--
+                Replace each src below with your own licensed photograph.
+                I'm not able to source or embed real photos of Messi/Argentina myself
+                (celebrity + editorial sports photography are both off-limits for me to
+                fetch or reproduce), so these are placeholder slots — drop your images
+                into /assets/football/ using the same filenames and it just works.
+                Keep the duplicated second set (fi-dup) in sync with the first for the
+                seamless infinite-loop illusion.
+              -->
+              <figure class="fi-slide"><span class="fi-sheen"></span><img src="assets/football/messi-01.jpg" alt="Lionel Messi lifting the World Cup trophy" loading="lazy"></figure>
+              <figure class="fi-slide"><span class="fi-sheen"></span><img src="assets/football/messi-02.jpg" alt="Messi celebrating with teammates" loading="lazy"></figure>
+              <figure class="fi-slide"><span class="fi-sheen"></span><img src="assets/football/argentina-01.jpg" alt="Argentina national team on the pitch" loading="lazy"></figure>
+              <figure class="fi-slide"><span class="fi-sheen"></span><img src="assets/football/messi-03.jpg" alt="Messi portrait, close crop" loading="lazy"></figure>
+              <figure class="fi-slide"><span class="fi-sheen"></span><img src="assets/football/argentina-02.jpg" alt="Argentina fans celebrating" loading="lazy"></figure>
+              <figure class="fi-slide"><span class="fi-sheen"></span><img src="assets/football/messi-04.jpg" alt="Messi walking with the World Cup trophy" loading="lazy"></figure>
+              <figure class="fi-slide"><span class="fi-sheen"></span><img src="assets/football/argentina-03.jpg" alt="Argentina dressing room, quiet moment" loading="lazy"></figure>
+
               <!-- fi-dup: identical duplicate set, required for the seamless loop -->
-              <figure class="fi-slide" aria-hidden="true"><span class="fi-sheen"></span><img
-                  src="assets/football/messi-01.jpg" alt="" loading="lazy"></figure>
-              <figure class="fi-slide" aria-hidden="true"><span class="fi-sheen"></span><img
-                  src="assets/football/messi-02.jpg" alt="" loading="lazy"></figure>
-              <figure class="fi-slide" aria-hidden="true"><span class="fi-sheen"></span><img
-                  src="assets/football/argentina-01.jpg" alt="" loading="lazy"></figure>
-              <figure class="fi-slide" aria-hidden="true"><span class="fi-sheen"></span><img
-                  src="assets/football/messi-03.jpg" alt="" loading="lazy"></figure>
-              <figure class="fi-slide" aria-hidden="true"><span class="fi-sheen"></span><img
-                  src="assets/football/argentina-02.jpg" alt="" loading="lazy"></figure>
-              <figure class="fi-slide" aria-hidden="true"><span class="fi-sheen"></span><img
-                  src="assets/football/messi-04.jpg" alt="" loading="lazy"></figure>
-              <figure class="fi-slide" aria-hidden="true"><span class="fi-sheen"></span><img
-                  src="assets/football/argentina-03.jpg" alt="" loading="lazy"></figure>
-              <figure class="fi-slide" aria-hidden="true"><span class="fi-sheen"></span><img
-                  src="assets/football/argentina-04.jpg" alt="" loading="lazy"></figure>
-              <figure class="fi-slide" aria-hidden="true"><span class="fi-sheen"></span><img
-                  src="assets/football/argentina-05.jpg" alt="" loading="lazy"></figure>
+              <figure class="fi-slide" aria-hidden="true"><span class="fi-sheen"></span><img src="assets/football/messi-01.jpg" alt="" loading="lazy"></figure>
+              <figure class="fi-slide" aria-hidden="true"><span class="fi-sheen"></span><img src="assets/football/messi-02.jpg" alt="" loading="lazy"></figure>
+              <figure class="fi-slide" aria-hidden="true"><span class="fi-sheen"></span><img src="assets/football/argentina-01.jpg" alt="" loading="lazy"></figure>
+              <figure class="fi-slide" aria-hidden="true"><span class="fi-sheen"></span><img src="assets/football/messi-03.jpg" alt="" loading="lazy"></figure>
+              <figure class="fi-slide" aria-hidden="true"><span class="fi-sheen"></span><img src="assets/football/argentina-02.jpg" alt="" loading="lazy"></figure>
+              <figure class="fi-slide" aria-hidden="true"><span class="fi-sheen"></span><img src="assets/football/messi-04.jpg" alt="" loading="lazy"></figure>
+              <figure class="fi-slide" aria-hidden="true"><span class="fi-sheen"></span><img src="assets/football/argentina-03.jpg" alt="" loading="lazy"></figure>
             </div>
           </div>
         </div>
@@ -1857,9 +1936,9 @@
       revealEls.forEach(el => el.classList.add('in-view'));
     }
 
-    // ---- scroll-spy nav ----
+    // ---- scroll-spy nav (desktop navlinks + mobile side rail) ----
     const sections = document.querySelectorAll('main section[id]');
-    const navAnchors = document.querySelectorAll('.navlinks a');
+    const navAnchors = document.querySelectorAll('.navlinks a, .rail-dot');
     if ('IntersectionObserver' in window && sections.length) {
       const spy = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
