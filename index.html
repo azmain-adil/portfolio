@@ -208,7 +208,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: clamp(20px, 4vw, 40px);
+      gap: clamp(14px, 3vw, 32px);
       padding: 10px 12px 10px 24px;
       max-width: none;
       margin: 0;
@@ -270,7 +270,7 @@
 
     .navlinks {
       display: flex;
-      gap: 2vw;
+      gap: 1.5vw;
       font-family: var(--mono);
       font-size: clamp(11px, 1.2vw, 12.5px);
       text-transform: uppercase;
@@ -405,9 +405,405 @@
       }
     }
 
-    @media (min-width: 861px) {
-      .mobile-brand {
-        display: none;
+    /* =========================================================
+       AdL. interactive identity card
+       (self-contained block — does not touch any other rule)
+       ========================================================= */
+
+    .adl-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      line-height: 1;
+    }
+
+    .adl-wrap .mobile-brand {
+      position: relative;
+      z-index: 2;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transform: translateZ(0) scale(1);
+      transition: transform .25s cubic-bezier(.34, 1.56, .64, 1);
+    }
+
+    .adl-wrap .mobile-brand:active {
+      transform: translateZ(0) scale(.94);
+    }
+
+    /* desktop-only: liquid gets a touch more active on hover — no scale, no glow */
+    @media (hover: hover) and (pointer: fine) {
+      .adl-wrap .mobile-brand:hover {
+        animation-duration: 1.5s;
+      }
+    }
+
+    /* liquid gets briefly more energetic right after tap */
+    .adl-wrap .mobile-brand.adl-excited {
+      animation-name: adlLiquidFlowExcited;
+      animation-duration: .5s;
+      filter: saturate(1.35) brightness(1.08);
+    }
+
+    @keyframes adlLiquidFlowExcited {
+      from {
+        background-position: 0 0;
+        background-size: 60px 132%;
+      }
+
+      50% {
+        background-size: 60px 108%;
+      }
+
+      to {
+        background-position: -120px 0;
+        background-size: 60px 132%;
+      }
+    }
+
+    /* soft emerald ripple, centered behind the wordmark */
+    .adl-ripple {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 14px;
+      height: 14px;
+      margin: -7px 0 0 -7px;
+      border-radius: 50%;
+      background: radial-gradient(circle, color-mix(in srgb, var(--green-bright) 55%, transparent) 0%, transparent 72%);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1;
+      will-change: transform, opacity;
+    }
+
+    .adl-ripple.adl-ripple-play {
+      animation: adlRipple .25s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    @keyframes adlRipple {
+      0% {
+        opacity: 0;
+        transform: scale(.4);
+      }
+
+      35% {
+        opacity: .45;
+      }
+
+      100% {
+        opacity: 0;
+        transform: scale(3.2);
+      }
+    }
+
+    /* backdrop */
+    .adl-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 9998;
+      background: color-mix(in srgb, var(--ink) 38%, transparent);
+      backdrop-filter: blur(0px) saturate(100%);
+      -webkit-backdrop-filter: blur(0px) saturate(100%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .45s ease, backdrop-filter .45s ease, -webkit-backdrop-filter .45s ease;
+    }
+
+    .adl-backdrop.adl-open {
+      opacity: 1;
+      pointer-events: auto;
+      backdrop-filter: blur(9px) saturate(130%);
+      -webkit-backdrop-filter: blur(9px) saturate(130%);
+    }
+
+    body.adl-lock {
+      overflow: hidden;
+    }
+
+    body.adl-lock main,
+    body.adl-lock footer {
+      filter: saturate(.85);
+    }
+
+    /* the morphing card itself */
+    .adl-card {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 320px;
+      max-width: calc(100vw - 48px);
+      height: 196px;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      pointer-events: none;
+      perspective: 1400px;
+    }
+
+    .adl-card.adl-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .adl-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 34px;
+      transform-style: preserve-3d;
+      transition:
+        transform .58s cubic-bezier(.19, 1, .22, 1),
+        border-radius .5s cubic-bezier(.19, 1, .22, 1);
+      will-change: transform;
+    }
+
+    .adl-card-inner.adl-flipped {
+      transform: rotateY(180deg);
+    }
+
+    .adl-face {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      overflow: hidden;
+      background:
+        radial-gradient(120% 140% at 12% 0%, rgba(255, 255, 255, .10) 0%, transparent 46%),
+        linear-gradient(155deg, #14171c 0%, #0a0c0f 62%, #0d1013 100%);
+      box-shadow:
+        0 30px 60px -18px rgba(0, 0, 0, .55),
+        0 10px 26px -12px rgba(0, 0, 0, .4),
+        inset 0 1px 0 rgba(255, 255, 255, .06);
+      color: #f2f4f6;
+      padding: 22px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: opacity .3s ease;
+    }
+
+    .adl-face::before {
+      /* glass highlight sweep */
+      content: '';
+      position: absolute;
+      top: -60%;
+      left: -20%;
+      width: 55%;
+      height: 220%;
+      background: linear-gradient(115deg, rgba(255, 255, 255, .16), rgba(255, 255, 255, 0) 60%);
+      transform: rotate(8deg);
+      pointer-events: none;
+    }
+
+    .adl-face-back {
+      transform: rotateY(180deg);
+    }
+
+    .adl-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .adl-card-name {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: .01em;
+      color: #fff;
+    }
+
+    .adl-card-role {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .04em;
+      color: rgba(240, 244, 248, .62);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .adl-card-mark {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: .02em;
+      color: var(--green-bright);
+      flex: 0 0 auto;
+    }
+
+    .adl-card-bottom {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .adl-card-uni {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: rgba(240, 244, 248, .48);
+    }
+
+    .adl-qr {
+      width: 52px;
+      height: 52px;
+      border-radius: 8px;
+      background: #fff;
+      padding: 4px;
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px -4px rgba(0, 0, 0, .5);
+    }
+
+    .adl-qr img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: 3px;
+    }
+
+    .adl-flip-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, .16);
+      background: rgba(255, 255, 255, .06);
+      color: rgba(240, 244, 248, .85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background .2s ease, transform .2s ease;
+      z-index: 2;
+    }
+
+    .adl-flip-btn:hover {
+      background: rgba(255, 255, 255, .14);
+    }
+
+    .adl-flip-btn:active {
+      transform: scale(.9);
+    }
+
+    .adl-flip-btn svg {
+      width: 15px;
+      height: 15px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .adl-back-list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .adl-back-list a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: rgba(240, 244, 248, .88);
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
+      transition: color .2s ease, padding-left .2s ease;
+    }
+
+    .adl-back-list a:last-child {
+      border-bottom: none;
+    }
+
+    .adl-back-list a:hover {
+      color: var(--green-bright);
+      padding-left: 4px;
+    }
+
+    .adl-back-list a span:last-child {
+      color: rgba(240, 244, 248, .4);
+      font-size: 10.5px;
+    }
+
+    .adl-back-badge {
+      align-self: flex-start;
+      font-family: var(--mono);
+      font-size: 9.5px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--green-bright);
+      border: 1px solid color-mix(in srgb, var(--green-bright) 55%, transparent);
+      border-radius: 999px;
+      padding: 4px 10px;
+    }
+
+    /* shared-element cross-fade layers (wordmark <-> card face) */
+    .adl-morph-label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-weight: 500;
+      font-size: 15px;
+      letter-spacing: .04em;
+      color: var(--green-bright);
+      opacity: 0;
+      transition: opacity .22s ease;
+      pointer-events: none;
+    }
+
+    .adl-card-content {
+      opacity: 0;
+      transition: opacity .3s ease .1s;
+    }
+
+    /* caption beneath the card */
+    .adl-caption {
+      position: fixed;
+      top: calc(50% + 118px);
+      left: 50%;
+      z-index: 9999;
+      transform: translate(-50%, 8px);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .02em;
+      color: color-mix(in srgb, var(--paper) 92%, var(--ink) 8%);
+      opacity: 0;
+      text-align: center;
+      width: min(280px, calc(100vw - 48px));
+      pointer-events: none;
+      transition: opacity .4s ease .15s, transform .4s ease .15s;
+    }
+
+    .adl-caption.adl-open {
+      opacity: .72;
+      transform: translate(-50%, 0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      .adl-card-inner,
+      .adl-backdrop,
+      .adl-caption,
+      .adl-wrap .mobile-brand {
+        transition-duration: .12s !important;
+      }
+
+      .adl-ripple.adl-ripple-play {
+        animation: none;
       }
     }
 
@@ -1762,7 +2158,11 @@
 
   <header class="top">
     <nav class="nav">
-      <span class="mobile-brand" aria-hidden="true">AdL.</span>
+      <span class="adl-wrap">
+        <span class="adl-ripple" id="adlRipple" aria-hidden="true"></span>
+        <span class="mobile-brand" id="adlBrand" role="button" tabindex="0" aria-haspopup="dialog"
+          aria-expanded="false" aria-label="Open Azmain Adil's digital business card">AdL.</span>
+      </span>
       <div class="navlinks" id="navLinks">
         <a href="#about" data-cell="B2">About</a>
         <a href="#experience" data-cell="C2">Experience</a>
@@ -1782,6 +2182,52 @@
       </button>
     </nav>
   </header>
+
+  <!-- AdL. interactive identity card (morphs out of the mobile wordmark) -->
+  <div class="adl-backdrop" id="adlBackdrop" aria-hidden="true"></div>
+
+  <div class="adl-card" id="adlCard" role="dialog" aria-modal="true" aria-label="Azmain Adil digital business card"
+    aria-hidden="true">
+    <div class="adl-card-inner" id="adlCardInner">
+      <span class="adl-morph-label" id="adlMorphLabel" aria-hidden="true">AdL.</span>
+
+      <button type="button" class="adl-flip-btn" id="adlFlipBtn" aria-label="Flip card">
+        <svg viewBox="0 0 24 24">
+          <path d="M4 12a8 8 0 0 1 13.6-5.7M20 12a8 8 0 0 1-13.6 5.7"></path>
+          <path d="M17 4v3h-3M7 20v-3h3"></path>
+        </svg>
+      </button>
+
+      <div class="adl-face adl-face-front">
+        <div class="adl-card-content">
+          <div class="adl-card-top">
+            <div>
+              <div class="adl-card-name">Azmain Adil</div>
+              <div class="adl-card-role">Management Information Systems<br>University of Dhaka</div>
+            </div>
+            <div class="adl-card-mark">AdL.</div>
+          </div>
+          <div class="adl-card-bottom">
+            <div class="adl-card-uni">Open to Internship</div>
+            <div class="adl-qr" id="adlQr" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="adl-face adl-face-back">
+        <div class="adl-card-content">
+          <div class="adl-card-top">
+            <div class="adl-card-name" style="font-size:15px;">Contact</div>
+            <div class="adl-card-mark">AdL.</div>
+          </div>
+          <nav class="adl-back-list" id="adlBackList" aria-label="Contact links"></nav>
+          <span class="adl-back-badge">Open to Internship</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="adl-caption" id="adlCaption">Designed as an interactive identity. Tap anywhere outside to continue.</p>
 
   <button type="button" id="theme-fab" class="theme-fab" aria-label="Toggle light and dark mode" title="Toggle theme">
     <svg class="icon-sun" viewBox="0 0 24 24">
@@ -2685,6 +3131,246 @@
         setOffset(e.key === 'ArrowLeft' ? MAX_OFFSET : -MAX_OFFSET, true);
         clearTimeout(viewport._fiKeyTimer);
         viewport._fiKeyTimer = setTimeout(() => { setOffset(0, true); resume(); }, 420);
+      });
+    })();
+  </script>
+
+  <script>
+    // ---- "AdL." interactive identity card ----
+    // Update this single object any time contact details change.
+    (function () {
+      const ADL_LINKS = {
+        portfolio: 'https://azmain-adil.lovable.app/',
+        resume: 'https://azmain-adil.lovable.app/Azmain_Adil_Resume.pdf',
+        github: 'https://github.com/azmain-adil',
+        linkedin: 'https://www.linkedin.com/in/azmain-adil-bd-du/',
+        email: 'azmainadil23@gmail.com',
+        phone: '+8801731504405'
+      };
+
+      const brand = document.getElementById('adlBrand');
+      const ripple = document.getElementById('adlRipple');
+      const backdrop = document.getElementById('adlBackdrop');
+      const card = document.getElementById('adlCard');
+      const cardInner = document.getElementById('adlCardInner');
+      const morphLabel = document.getElementById('adlMorphLabel');
+      const flipBtn = document.getElementById('adlFlipBtn');
+      const caption = document.getElementById('adlCaption');
+      const qrBox = document.getElementById('adlQr');
+      const backList = document.getElementById('adlBackList');
+
+      if (!brand || !card || !backdrop) return;
+
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let isOpen = false;
+      let isFlipped = false;
+
+      // -- build QR code (front) --
+      if (qrBox) {
+        const qrImg = document.createElement('img');
+        qrImg.alt = 'QR code linking to portfolio';
+        qrImg.loading = 'lazy';
+        qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=0&data=' +
+          encodeURIComponent(ADL_LINKS.portfolio);
+        qrImg.onerror = function () {
+          qrBox.innerHTML = '';
+          qrBox.style.background = 'transparent';
+          const fallback = document.createElement('a');
+          fallback.href = ADL_LINKS.portfolio;
+          fallback.target = '_blank';
+          fallback.rel = 'noopener noreferrer';
+          fallback.style.cssText = 'font-family:var(--mono);font-size:9px;color:var(--green-bright);text-decoration:underline;';
+          fallback.textContent = 'Portfolio ↗';
+          qrBox.appendChild(fallback);
+        };
+        qrBox.appendChild(qrImg);
+        qrBox.style.cursor = 'pointer';
+        qrBox.addEventListener('click', () => window.open(ADL_LINKS.portfolio, '_blank', 'noopener'));
+      }
+
+      // -- build back-of-card contact list from the config object --
+      if (backList) {
+        const rows = [
+          { label: 'Phone', value: ADL_LINKS.phone, href: 'tel:' + ADL_LINKS.phone.replace(/\s+/g, '') },
+          { label: 'Email', value: 'Send a message', href: 'mailto:' + ADL_LINKS.email },
+          { label: 'LinkedIn', value: 'View profile', href: ADL_LINKS.linkedin, ext: true },
+          { label: 'GitHub', value: 'View repos', href: ADL_LINKS.github, ext: true },
+          { label: 'Resume', value: 'Download PDF', href: ADL_LINKS.resume, ext: true }
+        ];
+        rows.forEach(row => {
+          const a = document.createElement('a');
+          a.href = row.href;
+          if (row.ext) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+          a.innerHTML = '<span>' + row.label + '</span><span>' + row.value + '</span>';
+          backList.appendChild(a);
+        });
+      }
+
+      function excite() {
+        if (reduceMotion) return;
+        brand.classList.add('adl-excited');
+        setTimeout(() => brand.classList.remove('adl-excited'), 300);
+      }
+
+      function playRipple() {
+        if (!ripple || reduceMotion) return;
+        ripple.classList.remove('adl-ripple-play');
+        // force reflow so the animation can restart
+        void ripple.offsetWidth;
+        ripple.classList.add('adl-ripple-play');
+      }
+
+      // -- shared-element morph geometry: card starts exactly where the wordmark is --
+      function morphFrom(rect, targetRect) {
+        const scaleX = rect.width / targetRect.width;
+        const scaleY = rect.height / targetRect.height;
+        const dx = (rect.left + rect.width / 2) - (targetRect.left + targetRect.width / 2);
+        const dy = (rect.top + rect.height / 2) - (targetRect.top + targetRect.height / 2);
+        return { scaleX, scaleY, dx, dy };
+      }
+
+      function openCard() {
+        if (isOpen) return;
+        isOpen = true;
+
+        excite();
+        playRipple();
+
+        const brandRect = brand.getBoundingClientRect();
+
+        // reveal (opacity only, geometry set below) so we can measure the final rect
+        backdrop.classList.add('adl-open');
+        card.classList.add('adl-open');
+        card.setAttribute('aria-hidden', 'false');
+        brand.setAttribute('aria-expanded', 'true');
+        document.body.classList.add('adl-lock');
+
+        const targetRect = cardInner.getBoundingClientRect();
+
+        if (reduceMotion) {
+          morphLabel.style.opacity = '0';
+          document.querySelectorAll('.adl-card-content').forEach(el => el.style.opacity = '1');
+          caption.classList.add('adl-open');
+          return;
+        }
+
+        const m = morphFrom(brandRect, targetRect);
+
+        // start state: pill-shaped, sized/positioned exactly like "AdL."
+        cardInner.style.transition = 'none';
+        cardInner.style.borderRadius = '10px';
+        cardInner.style.transform = `translate(${m.dx}px, ${m.dy}px) scale(${m.scaleX}, ${m.scaleY})`;
+        morphLabel.style.transition = 'none';
+        morphLabel.style.opacity = '1';
+        document.querySelectorAll('.adl-card-content').forEach(el => el.style.opacity = '0');
+
+        // next frame: release to full card geometry — this is the "unfold" morph
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            cardInner.style.transition = '';
+            morphLabel.style.transition = '';
+            cardInner.style.borderRadius = '34px';
+            cardInner.style.transform = 'translate(0, 0) scale(1, 1)';
+            morphLabel.style.opacity = '0';
+            setTimeout(() => {
+              document.querySelectorAll('.adl-card-content').forEach(el => el.style.opacity = '1');
+            }, 160);
+            setTimeout(() => caption.classList.add('adl-open'), 120);
+          });
+        });
+      }
+
+      function closeCard() {
+        if (!isOpen) return;
+        isOpen = false;
+
+        brand.setAttribute('aria-expanded', 'false');
+        caption.classList.remove('adl-open');
+
+        const brandRect = brand.getBoundingClientRect();
+        const targetRect = cardInner.getBoundingClientRect();
+
+        if (reduceMotion) {
+          backdrop.classList.remove('adl-open');
+          card.classList.remove('adl-open');
+          card.setAttribute('aria-hidden', 'true');
+          document.body.classList.remove('adl-lock');
+          if (isFlipped) { cardInner.classList.remove('adl-flipped'); isFlipped = false; }
+          document.querySelectorAll('.adl-card-content').forEach(el => el.style.opacity = '0');
+          return;
+        }
+
+        const m = morphFrom(brandRect, targetRect);
+
+        document.querySelectorAll('.adl-card-content').forEach(el => el.style.opacity = '0');
+        morphLabel.style.opacity = '1';
+        cardInner.style.transform = `translate(${m.dx}px, ${m.dy}px) scale(${m.scaleX}, ${m.scaleY})`;
+        cardInner.style.borderRadius = '10px';
+        backdrop.classList.remove('adl-open');
+
+        setTimeout(() => {
+          card.classList.remove('adl-open');
+          card.setAttribute('aria-hidden', 'true');
+          document.body.classList.remove('adl-lock');
+          morphLabel.style.opacity = '0';
+          if (isFlipped) { cardInner.classList.remove('adl-flipped'); isFlipped = false; }
+          // reset inline geometry so the next open() computes cleanly
+          cardInner.style.transition = 'none';
+          cardInner.style.transform = 'translate(0,0) scale(1,1)';
+          cardInner.style.borderRadius = '34px';
+          void cardInner.offsetWidth;
+          cardInner.style.transition = '';
+        }, 480);
+
+        // liquid settles back to its normal subtle state automatically
+        // since .adl-excited was only ever a brief, self-removing class.
+      }
+
+      function toggleCard() {
+        isOpen ? closeCard() : openCard();
+      }
+
+      // -- open triggers --
+      brand.addEventListener('click', toggleCard);
+      brand.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggleCard();
+        }
+      });
+
+      // -- flip --
+      if (flipBtn) {
+        flipBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          isFlipped = !isFlipped;
+          cardInner.classList.toggle('adl-flipped', isFlipped);
+        });
+      }
+
+      // -- close: tap outside --
+      backdrop.addEventListener('click', closeCard);
+
+      // -- close: ESC (desktop) --
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isOpen) closeCard();
+      });
+
+      // -- close: swipe down on the card --
+      let touchStartY = null;
+      card.addEventListener('touchstart', (e) => {
+        touchStartY = e.touches[0].clientY;
+      }, { passive: true });
+      card.addEventListener('touchend', (e) => {
+        if (touchStartY === null) return;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        touchStartY = null;
+        if (dy > 70) closeCard();
+      }, { passive: true });
+
+      // -- keep morph anchored correctly if the viewport resizes while open --
+      window.addEventListener('resize', () => {
+        if (isOpen) closeCard();
       });
     })();
   </script>
