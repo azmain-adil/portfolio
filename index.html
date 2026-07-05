@@ -217,14 +217,22 @@
     @media (max-width: 860px) {
       header.top {
         top: 10px;
-        width: fit-content;
-        max-width: calc(100% - 24px);
-        border-radius: 999px;
+        left: 12px;
+        right: 12px;
+        transform: none;
+        width: auto;
+        max-width: none;
+        background: none;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
       }
 
       .nav {
-        padding: 8px 8px 8px 20px;
-        justify-content: flex-start;
+        padding: 12px 18px;
+        justify-content: space-between;
         gap: 12px;
         min-height: 42px;
       }
@@ -232,6 +240,11 @@
       .mobile-brand {
         display: flex;
         align-items: center;
+        order: 2;
+      }
+
+      .nav-toggle {
+        order: 1;
       }
     }
 
@@ -340,58 +353,85 @@
       display: none;
     }
 
-    /* Understated personal signature — mobile-only, left side of the mobile header */
+    /* Understated personal signature — mobile-only, right side of the mobile header */
     .mobile-brand {
-      display: none;
       font-family: var(--mono);
-      font-weight: 600;
-      font-size: 13px;
-      letter-spacing: .09em;
-      color: var(--muted);
+      font-weight: 500;
+      font-size: 15px;
+      letter-spacing: .04em;
       line-height: 1;
       user-select: none;
+      flex: 0 0 auto;
+      color: var(--green-bright);
     }
 
-    /* Premium circular glass menu button — hidden on desktop, shown on mobile */
+    @supports (background-clip: text) or (-webkit-background-clip: text) {
+      .mobile-brand {
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+        background-color: var(--green-bright);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='40'%3E%3Cpath d='M0 22 Q15 12 30 22 T60 22 V40 H0 Z' fill='%23ffffff' fill-opacity='0.92'/%3E%3C/svg%3E");
+        background-repeat: repeat-x;
+        background-size: 60px 100%;
+        background-position: 0 0;
+        -webkit-background-clip: text;
+        background-clip: text;
+        animation: adlLiquidFlow 2.6s linear infinite;
+        will-change: background-position;
+      }
+    }
+
+    @keyframes adlLiquidFlow {
+      from {
+        background-position: 0 0;
+      }
+      to {
+        background-position: -60px 0;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .mobile-brand {
+        animation: none;
+      }
+    }
+
+    @media (min-width: 861px) {
+      .mobile-brand {
+        display: none;
+      }
+    }
+
+    /* Minimal mobile menu icon — no circle, no glass button, hidden on desktop */
     .nav-toggle {
       display: none;
       position: relative;
-      width: 40px;
-      height: 40px;
+      width: 26px;
+      height: 26px;
       flex: 0 0 auto;
-      border-radius: 50%;
-      background: color-mix(in srgb, var(--white) 46%, transparent);
-      backdrop-filter: blur(22px) saturate(180%);
-      -webkit-backdrop-filter: blur(22px) saturate(180%);
-      border: 1px solid color-mix(in srgb, var(--line) 55%, transparent);
-      box-shadow: 0 1px 0 var(--glass-spec) inset, 0 14px 30px -18px var(--glass-shadow);
+      background: transparent;
+      border: none;
+      border-radius: 0;
       padding: 0;
+      margin: 0;
       cursor: pointer;
-      transition: transform .25s cubic-bezier(.16, 1, .3, 1), box-shadow .25s ease, background .25s ease;
-      will-change: transform;
+      transition: opacity .2s ease;
       -webkit-tap-highlight-color: transparent;
     }
 
     .nav-toggle:hover {
-      transform: translateY(-2px) translateZ(0);
-      background: color-mix(in srgb, var(--white) 62%, transparent);
-      box-shadow: 0 1px 0 var(--glass-spec) inset, 0 20px 38px -16px var(--glass-shadow);
+      opacity: .7;
     }
 
     .nav-toggle:active {
-      transform: translateY(0) translateZ(0);
-      box-shadow: 0 1px 0 var(--glass-spec) inset, 0 8px 18px -14px var(--glass-shadow);
-    }
-
-    html[data-theme="dark"] .nav-toggle:hover {
-      background: color-mix(in srgb, var(--white) 14%, transparent);
+      opacity: .5;
     }
 
     .nav-toggle span {
       position: absolute;
       left: 50%;
       top: 50%;
-      width: 15px;
+      width: 18px;
       height: 1.5px;
       border-radius: 2px;
       background: var(--ink);
@@ -1235,7 +1275,9 @@
 
     @media (max-width: 860px) {
       .nav-toggle {
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .navcta-group {
@@ -1711,7 +1753,7 @@
 
   <header class="top">
     <nav class="nav">
-      <span class="mobile-brand" aria-hidden="true">AA</span>
+      <span class="mobile-brand" aria-hidden="true">AdL.</span>
       <div class="navlinks" id="navLinks">
         <a href="#about" data-cell="B2">About</a>
         <a href="#experience" data-cell="C2">Experience</a>
