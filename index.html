@@ -421,7 +421,7 @@
         .adl-wrap .mobile-brand {
             position: relative;
             z-index: 2;
-            cursor: pointer;
+            cursor: none;
             -webkit-tap-highlight-color: transparent;
             transform: translateZ(0) scale(1);
             transition: transform .25s cubic-bezier(.34, 1.56, .64, 1);
@@ -526,19 +526,23 @@
             filter: saturate(.85);
         }
 
-        /* the morphing card itself */
+        /* ============================================================
+           AdL. digital business card — premium executive identity card
+           ============================================================ */
+
         .adl-card {
             position: fixed;
             top: 50%;
             left: 50%;
-            width: 320px;
-            max-width: calc(100vw - 48px);
-            height: 196px;
+            width: 340px;
+            max-width: calc(100vw - 40px);
+            aspect-ratio: 1.586 / 1;
             z-index: 9999;
             transform: translate(-50%, -50%);
             opacity: 0;
             pointer-events: none;
-            perspective: 1400px;
+            perspective: 1800px;
+            transition: opacity .45s ease;
         }
 
         .adl-card.adl-open {
@@ -546,20 +550,35 @@
             pointer-events: auto;
         }
 
+        /* morph layer — JS drives translate/scale + border-radius here only,
+           so it never fights with the flip transform below */
+        .adl-card-morph {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 26px;
+            transform: translateZ(0);
+            transition:
+                transform .62s cubic-bezier(.34, 1.56, .64, 1),
+                border-radius .5s cubic-bezier(.19, 1, .22, 1);
+            will-change: transform, border-radius;
+        }
+
+        /* flip layer — purely class-driven, isolated from the morph layer
+           above so an inline transform on .adl-card-morph can never block it */
         .adl-card-inner {
             position: relative;
             width: 100%;
             height: 100%;
-            border-radius: 34px;
+            border-radius: inherit;
             transform-style: preserve-3d;
-            transition:
-                transform .58s cubic-bezier(.19, 1, .22, 1),
-                border-radius .5s cubic-bezier(.19, 1, .22, 1);
+            transform: translateZ(0) rotateY(0deg);
+            transition: transform .64s cubic-bezier(.65, 0, .35, 1);
             will-change: transform;
         }
 
         .adl-card-inner.adl-flipped {
-            transform: rotateY(180deg);
+            transform: translateZ(0) rotateY(180deg);
         }
 
         .adl-face {
@@ -570,14 +589,15 @@
             -webkit-backface-visibility: hidden;
             overflow: hidden;
             background:
-                radial-gradient(120% 140% at 12% 0%, rgba(255, 255, 255, .10) 0%, transparent 46%),
-                linear-gradient(155deg, #14171c 0%, #0a0c0f 62%, #0d1013 100%);
+                radial-gradient(130% 150% at 8% -10%, rgba(255, 255, 255, .12) 0%, transparent 48%),
+                linear-gradient(160deg, #181c22 0%, #0a0c0f 58%, #0c0f13 100%);
             box-shadow:
-                0 30px 60px -18px rgba(0, 0, 0, .55),
-                0 10px 26px -12px rgba(0, 0, 0, .4),
-                inset 0 1px 0 rgba(255, 255, 255, .06);
-            color: #f2f4f6;
-            padding: 22px 24px;
+                0 40px 80px -24px rgba(0, 0, 0, .6),
+                0 14px 32px -14px rgba(0, 0, 0, .45),
+                inset 0 1px 0 rgba(255, 255, 255, .08),
+                inset 0 0 0 1px rgba(255, 255, 255, .05);
+            color: #f4f6f8;
+            padding: 26px 28px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -585,15 +605,25 @@
         }
 
         .adl-face::before {
-            /* glass highlight sweep */
+            /* soft glass highlight sweep */
             content: '';
             position: absolute;
-            top: -60%;
-            left: -20%;
-            width: 55%;
-            height: 220%;
-            background: linear-gradient(115deg, rgba(255, 255, 255, .16), rgba(255, 255, 255, 0) 60%);
+            top: -70%;
+            left: -25%;
+            width: 50%;
+            height: 240%;
+            background: linear-gradient(115deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, 0) 62%);
             transform: rotate(8deg);
+            pointer-events: none;
+        }
+
+        .adl-face::after {
+            /* faint bottom reflection for realistic depth */
+            content: '';
+            position: absolute;
+            inset: auto 0 0 0;
+            height: 40%;
+            background: linear-gradient(0deg, rgba(255, 255, 255, .035), transparent);
             pointer-events: none;
         }
 
@@ -601,98 +631,131 @@
             transform: rotateY(180deg);
         }
 
-        .adl-card-top {
+        .adl-card-header {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             justify-content: space-between;
-            gap: 12px;
-        }
-
-        .adl-card-name {
-            font-family: var(--serif);
-            font-size: 20px;
-            font-weight: 500;
-            letter-spacing: .01em;
-            color: #fff;
-        }
-
-        .adl-card-role {
-            font-family: var(--mono);
-            font-size: 11px;
-            letter-spacing: .04em;
-            color: rgba(240, 244, 248, .62);
-            margin-top: 6px;
-            line-height: 1.5;
         }
 
         .adl-card-mark {
             font-family: var(--mono);
             font-weight: 600;
             font-size: 13px;
-            letter-spacing: .02em;
+            letter-spacing: .03em;
             color: var(--green-bright);
             flex: 0 0 auto;
         }
 
-        .adl-card-bottom {
+        .adl-card-identity {
             display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            gap: 14px;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .adl-card-name {
+            font-family: var(--serif);
+            font-size: 24px;
+            font-weight: 500;
+            letter-spacing: .005em;
+            color: #fff;
+            line-height: 1.15;
+        }
+
+        .adl-card-title {
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: .03em;
+            color: rgba(244, 246, 248, .72);
         }
 
         .adl-card-uni {
             font-family: var(--mono);
             font-size: 10.5px;
-            letter-spacing: .05em;
+            font-weight: 500;
+            letter-spacing: .07em;
             text-transform: uppercase;
-            color: rgba(240, 244, 248, .48);
+            color: rgba(244, 246, 248, .42);
+        }
+
+        .adl-card-footer {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .adl-card-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-family: var(--mono);
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            color: rgba(244, 246, 248, .55);
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: 999px;
+            padding: 7px 12px 7px 10px;
+        }
+
+        .adl-status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--green-bright);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--green-bright) 25%, transparent);
+            flex: 0 0 auto;
         }
 
         .adl-qr {
-            width: 52px;
-            height: 52px;
-            border-radius: 8px;
+            width: 56px;
+            height: 56px;
+            border-radius: 10px;
             background: #fff;
-            padding: 4px;
+            padding: 5px;
             flex: 0 0 auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 14px -4px rgba(0, 0, 0, .5);
+            box-shadow: 0 6px 18px -6px rgba(0, 0, 0, .55);
         }
 
         .adl-qr img {
             width: 100%;
             height: 100%;
             display: block;
-            border-radius: 3px;
+            border-radius: 4px;
         }
 
         .adl-flip-btn {
             position: absolute;
-            top: 14px;
-            right: 14px;
-            width: 30px;
-            height: 30px;
+            top: 16px;
+            right: 16px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             border: 1px solid rgba(255, 255, 255, .16);
             background: rgba(255, 255, 255, .06);
-            color: rgba(240, 244, 248, .85);
+            color: rgba(244, 246, 248, .85);
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            transition: background .2s ease, transform .2s ease;
-            z-index: 2;
+            cursor: none;
+            transition: background .2s ease, transform .2s ease, border-color .2s ease;
+            /* lives outside the rotating flip layer so it never mirrors or
+               overlaps face content — always pinned top-right, both sides */
+            z-index: 4;
         }
 
         .adl-flip-btn:hover {
             background: rgba(255, 255, 255, .14);
+            border-color: rgba(255, 255, 255, .26);
         }
 
         .adl-flip-btn:active {
-            transform: scale(.9);
+            transform: scale(.88);
         }
 
         .adl-flip-btn svg {
@@ -705,48 +768,61 @@
             stroke-linejoin: round;
         }
 
-        .adl-back-list {
+        /* -------- back face: minimal contact fields -------- */
+        .adl-card-content-back {
+            height: 100%;
             display: flex;
             flex-direction: column;
-            gap: 9px;
-            font-family: var(--mono);
-            font-size: 12px;
         }
 
-        .adl-back-list a {
+        .adl-back-list {
+            flex: 1 1 auto;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: rgba(240, 244, 248, .88);
-            padding: 6px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, .08);
-            transition: color .2s ease, padding-left .2s ease;
+            flex-direction: column;
+            justify-content: center;
+            gap: 26px;
         }
 
-        .adl-back-list a:last-child {
-            border-bottom: none;
+        .adl-back-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            color: inherit;
+            text-decoration: none;
+            width: fit-content;
         }
 
-        .adl-back-list a:hover {
-            color: var(--green-bright);
-            padding-left: 4px;
-        }
-
-        .adl-back-list a span:last-child {
-            color: rgba(240, 244, 248, .4);
-            font-size: 10.5px;
-        }
-
-        .adl-back-badge {
-            align-self: flex-start;
+        .adl-back-label {
             font-family: var(--mono);
             font-size: 9.5px;
-            letter-spacing: .06em;
+            font-weight: 500;
+            letter-spacing: .1em;
             text-transform: uppercase;
+            color: rgba(244, 246, 248, .4);
+            transition: color .2s ease;
+        }
+
+        .adl-back-value {
+            font-family: var(--mono);
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: .01em;
+            color: rgba(244, 246, 248, .94);
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, .1);
+            transition: color .2s ease, border-color .2s ease, transform .2s ease;
+        }
+
+        .adl-back-field:hover .adl-back-value,
+        .adl-back-field:focus-visible .adl-back-value {
             color: var(--green-bright);
-            border: 1px solid color-mix(in srgb, var(--green-bright) 55%, transparent);
-            border-radius: 999px;
-            padding: 4px 10px;
+            border-color: color-mix(in srgb, var(--green-bright) 45%, transparent);
+            transform: translateX(2px);
+        }
+
+        .adl-back-field:hover .adl-back-label,
+        .adl-back-field:focus-visible .adl-back-label {
+            color: rgba(244, 246, 248, .6);
         }
 
         /* shared-element cross-fade layers (wordmark <-> card face) */
@@ -768,35 +844,45 @@
 
         .adl-card-content {
             opacity: 0;
-            transition: opacity .3s ease .1s;
+            transform: translateY(6px);
+            transition: opacity .4s cubic-bezier(.19, 1, .22, 1), transform .45s cubic-bezier(.19, 1, .22, 1);
+        }
+
+        .adl-card-content.adl-visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* caption beneath the card */
         .adl-caption {
             position: fixed;
-            top: calc(50% + 118px);
+            top: calc(50% + 132px);
             left: 50%;
             z-index: 9999;
             transform: translate(-50%, 8px);
             font-family: var(--mono);
-            font-size: 11px;
-            letter-spacing: .02em;
-            color: color-mix(in srgb, var(--paper) 92%, var(--ink) 8%);
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: .05em;
+            color: color-mix(in srgb, var(--paper) 94%, var(--ink) 6%);
             opacity: 0;
             text-align: center;
-            width: min(280px, calc(100vw - 48px));
+            width: min(300px, calc(100vw - 40px));
             pointer-events: none;
-            transition: opacity .4s ease .15s, transform .4s ease .15s;
+            transition: opacity .45s ease .15s, transform .45s ease .15s;
         }
 
         .adl-caption.adl-open {
-            opacity: .72;
+            opacity: .86;
             transform: translate(-50%, 0);
         }
 
         @media (prefers-reduced-motion: reduce) {
 
+            .adl-card,
+            .adl-card-morph,
             .adl-card-inner,
+            .adl-card-content,
             .adl-backdrop,
             .adl-caption,
             .adl-wrap .mobile-brand {
@@ -2189,9 +2275,9 @@
 
     <div class="adl-card" id="adlCard" role="dialog" aria-modal="true" aria-label="Azmain Adil digital business card"
         aria-hidden="true">
-        <div class="adl-card-inner" id="adlCardInner">
-            <span class="adl-morph-label" id="adlMorphLabel" aria-hidden="true">AdL.</span>
-
+        <div class="adl-card-morph" id="adlCardMorph">
+            <!-- flip trigger lives on the non-rotating morph layer, so it stays
+                 pinned to the top-right corner on both the front and the back -->
             <button type="button" class="adl-flip-btn" id="adlFlipBtn" aria-label="Flip card">
                 <svg viewBox="0 0 24 24">
                     <path d="M4 12a8 8 0 0 1 13.6-5.7M20 12a8 8 0 0 1-13.6 5.7"></path>
@@ -2199,30 +2285,35 @@
                 </svg>
             </button>
 
-            <div class="adl-face adl-face-front">
-                <div class="adl-card-content">
-                    <div class="adl-card-top">
-                        <div>
-                            <div class="adl-card-name">Azmain Adil</div>
-                            <div class="adl-card-role">Management Information Systems<br>University of Dhaka</div>
+            <div class="adl-card-inner" id="adlCardInner">
+                <span class="adl-morph-label" id="adlMorphLabel" aria-hidden="true">AdL.</span>
+
+                <div class="adl-face adl-face-front">
+                    <div class="adl-card-content">
+                        <div class="adl-card-header">
+                            <span class="adl-card-mark">AdL.</span>
                         </div>
-                        <div class="adl-card-mark">AdL.</div>
-                    </div>
-                    <div class="adl-card-bottom">
-                        <div class="adl-card-uni">Open to Internship</div>
-                        <div class="adl-qr" id="adlQr" aria-hidden="true"></div>
+                        <div class="adl-card-identity">
+                            <div class="adl-card-name">Azmain Adil</div>
+                            <div class="adl-card-title">Management Information Systems</div>
+                            <div class="adl-card-uni">University of Dhaka</div>
+                        </div>
+                        <div class="adl-card-footer">
+                            <span class="adl-card-status"><span class="adl-status-dot"
+                                    aria-hidden="true"></span>Open to internship</span>
+                            <div class="adl-qr" id="adlQr" aria-hidden="true"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="adl-face adl-face-back">
-                <div class="adl-card-content">
-                    <div class="adl-card-top">
-                        <div class="adl-card-name" style="font-size:15px;">Contact</div>
-                        <div class="adl-card-mark">AdL.</div>
+                <div class="adl-face adl-face-back">
+                    <div class="adl-card-content adl-card-content-back">
+                        <div class="adl-card-header">
+                            <span class="adl-card-name" style="font-size:15px;">Contact</span>
+                            <span class="adl-card-mark">AdL.</span>
+                        </div>
+                        <nav class="adl-back-list" id="adlBackList" aria-label="Contact links"></nav>
                     </div>
-                    <nav class="adl-back-list" id="adlBackList" aria-label="Contact links"></nav>
-                    <span class="adl-back-badge">Open to Internship</span>
                 </div>
             </div>
         </div>
@@ -3154,6 +3245,7 @@
             const ripple = document.getElementById('adlRipple');
             const backdrop = document.getElementById('adlBackdrop');
             const card = document.getElementById('adlCard');
+            const cardMorph = document.getElementById('adlCardMorph');
             const cardInner = document.getElementById('adlCardInner');
             const morphLabel = document.getElementById('adlMorphLabel');
             const flipBtn = document.getElementById('adlFlipBtn');
@@ -3161,7 +3253,7 @@
             const qrBox = document.getElementById('adlQr');
             const backList = document.getElementById('adlBackList');
 
-            if (!brand || !card || !backdrop) return;
+            if (!brand || !card || !backdrop || !cardMorph) return;
 
             const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             let isOpen = false;
@@ -3186,24 +3278,23 @@
                     qrBox.appendChild(fallback);
                 };
                 qrBox.appendChild(qrImg);
-                qrBox.style.cursor = 'pointer';
                 qrBox.addEventListener('click', () => window.open(ADL_LINKS.portfolio, '_blank', 'noopener'));
             }
 
-            // -- build back-of-card contact list from the config object --
+            // -- build back-of-card contact fields from the config object --
+            // kept deliberately to just Email + Phone for a clean, minimal back
             if (backList) {
                 const rows = [
-                    { label: 'Phone', value: ADL_LINKS.phone, href: 'tel:' + ADL_LINKS.phone.replace(/\s+/g, '') },
-                    { label: 'Email', value: 'Send a message', href: 'mailto:' + ADL_LINKS.email },
-                    { label: 'LinkedIn', value: 'View profile', href: ADL_LINKS.linkedin, ext: true },
-                    { label: 'GitHub', value: 'View repos', href: ADL_LINKS.github, ext: true },
-                    { label: 'Resume', value: 'Download PDF', href: ADL_LINKS.resume, ext: true }
+                    { label: 'Email', value: ADL_LINKS.email, href: 'mailto:' + ADL_LINKS.email },
+                    { label: 'Phone', value: ADL_LINKS.phone, href: 'tel:' + ADL_LINKS.phone.replace(/\s+/g, '') }
                 ];
                 rows.forEach(row => {
                     const a = document.createElement('a');
+                    a.className = 'adl-back-field';
                     a.href = row.href;
-                    if (row.ext) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
-                    a.innerHTML = '<span>' + row.label + '</span><span>' + row.value + '</span>';
+                    a.innerHTML =
+                        '<span class="adl-back-label">' + row.label + '</span>' +
+                        '<span class="adl-back-value">' + row.value + '</span>';
                     backList.appendChild(a);
                 });
             }
@@ -3220,6 +3311,10 @@
                 // force reflow so the animation can restart
                 void ripple.offsetWidth;
                 ripple.classList.add('adl-ripple-play');
+            }
+
+            function setContentVisible(visible) {
+                document.querySelectorAll('.adl-card-content').forEach(el => el.classList.toggle('adl-visible', visible));
             }
 
             // -- shared-element morph geometry: card starts exactly where the wordmark is --
@@ -3247,11 +3342,11 @@
                 brand.setAttribute('aria-expanded', 'true');
                 document.body.classList.add('adl-lock');
 
-                const targetRect = cardInner.getBoundingClientRect();
+                const targetRect = cardMorph.getBoundingClientRect();
 
                 if (reduceMotion) {
                     morphLabel.style.opacity = '0';
-                    document.querySelectorAll('.adl-card-content').forEach(el => el.style.opacity = '1');
+                    setContentVisible(true);
                     caption.classList.add('adl-open');
                     return;
                 }
@@ -3259,24 +3354,22 @@
                 const m = morphFrom(brandRect, targetRect);
 
                 // start state: pill-shaped, sized/positioned exactly like "AdL."
-                cardInner.style.transition = 'none';
-                cardInner.style.borderRadius = '10px';
-                cardInner.style.transform = `translate(${m.dx}px, ${m.dy}px) scale(${m.scaleX}, ${m.scaleY})`;
+                cardMorph.style.transition = 'none';
+                cardMorph.style.borderRadius = '14px';
+                cardMorph.style.transform = `translate(${m.dx}px, ${m.dy}px) scale(${m.scaleX}, ${m.scaleY})`;
                 morphLabel.style.transition = 'none';
                 morphLabel.style.opacity = '1';
-                document.querySelectorAll('.adl-card-content').forEach(el => el.style.opacity = '0');
+                setContentVisible(false);
 
-                // next frame: release to full card geometry — this is the "unfold" morph
+                // next frame: release to full card geometry — this is the luxurious "unfold" morph
                 requestAnimationFrame(() => {
                     requestAnimationFrame(() => {
-                        cardInner.style.transition = '';
+                        cardMorph.style.transition = '';
                         morphLabel.style.transition = '';
-                        cardInner.style.borderRadius = '34px';
-                        cardInner.style.transform = 'translate(0, 0) scale(1, 1)';
+                        cardMorph.style.borderRadius = '26px';
+                        cardMorph.style.transform = 'translate(0, 0) scale(1, 1)';
                         morphLabel.style.opacity = '0';
-                        setTimeout(() => {
-                            document.querySelectorAll('.adl-card-content').forEach(el => el.style.opacity = '1');
-                        }, 160);
+                        setTimeout(() => setContentVisible(true), 160);
                         setTimeout(() => caption.classList.add('adl-open'), 120);
                     });
                 });
@@ -3290,7 +3383,7 @@
                 caption.classList.remove('adl-open');
 
                 const brandRect = brand.getBoundingClientRect();
-                const targetRect = cardInner.getBoundingClientRect();
+                const targetRect = cardMorph.getBoundingClientRect();
 
                 if (reduceMotion) {
                     backdrop.classList.remove('adl-open');
@@ -3298,30 +3391,30 @@
                     card.setAttribute('aria-hidden', 'true');
                     document.body.classList.remove('adl-lock');
                     if (isFlipped) { cardInner.classList.remove('adl-flipped'); isFlipped = false; }
-                    document.querySelectorAll('.adl-card-content').forEach(el => el.style.opacity = '0');
+                    setContentVisible(false);
                     return;
                 }
 
                 const m = morphFrom(brandRect, targetRect);
 
-                document.querySelectorAll('.adl-card-content').forEach(el => el.style.opacity = '0');
+                setContentVisible(false);
                 morphLabel.style.opacity = '1';
-                cardInner.style.transform = `translate(${m.dx}px, ${m.dy}px) scale(${m.scaleX}, ${m.scaleY})`;
-                cardInner.style.borderRadius = '10px';
+                cardMorph.style.transform = `translate(${m.dx}px, ${m.dy}px) scale(${m.scaleX}, ${m.scaleY})`;
+                cardMorph.style.borderRadius = '14px';
                 backdrop.classList.remove('adl-open');
+                card.classList.remove('adl-open'); // soft fade out, reverses the entrance exactly
 
                 setTimeout(() => {
-                    card.classList.remove('adl-open');
                     card.setAttribute('aria-hidden', 'true');
                     document.body.classList.remove('adl-lock');
                     morphLabel.style.opacity = '0';
                     if (isFlipped) { cardInner.classList.remove('adl-flipped'); isFlipped = false; }
                     // reset inline geometry so the next open() computes cleanly
-                    cardInner.style.transition = 'none';
-                    cardInner.style.transform = 'translate(0,0) scale(1,1)';
-                    cardInner.style.borderRadius = '34px';
-                    void cardInner.offsetWidth;
-                    cardInner.style.transition = '';
+                    cardMorph.style.transition = 'none';
+                    cardMorph.style.transform = 'translate(0,0) scale(1,1)';
+                    cardMorph.style.borderRadius = '26px';
+                    void cardMorph.offsetWidth;
+                    cardMorph.style.transition = '';
                 }, 480);
 
                 // liquid settles back to its normal subtle state automatically
@@ -3341,7 +3434,8 @@
                 }
             });
 
-            // -- flip --
+            // -- flip: purely toggles a class on the isolated flip layer, so it
+            // always works regardless of what the morph layer is doing --
             if (flipBtn) {
                 flipBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
