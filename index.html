@@ -2313,8 +2313,8 @@
                             <div class="adl-card-uni">University of Dhaka</div>
                         </div>
                         <div class="adl-card-footer">
-                            <span class="adl-card-status"><span class="adl-status-dot"
-                                    aria-hidden="true"></span>Open to internship</span>
+                            <span class="adl-card-status"><span class="adl-status-dot" aria-hidden="true"></span>Open to
+                                internship</span>
                             <div class="adl-qr" id="adlQr" aria-hidden="true"></div>
                         </div>
                     </div>
@@ -2864,7 +2864,7 @@
                                 →</span></a>
                         <a href="tel:+8801731504405"><span>Phone</span><span>+880 1731 504405 →</span></a>
                         <a href="https://wa.me/8801731504405"><span>WhatsApp</span><span>Message →</span></a>
-                        <a href="https://azmain-adil.lovable.app/Azmain_Adil_Resume.pdf"><span>Resume</span><span>Download
+                        <a href="https://drive.google.com/file/d/16rRdVR6zdmImmaGJSKAzkZZoMW_ogXlH/view?usp=sharing"><span>Resume</span><span>Download
                                 PDF
                                 →</span></a>
 
@@ -2987,7 +2987,7 @@
                 }
             }
             updateHeaderScrollState();
-            window.addEventListener('scroll', updateHeaderScrollState, { passive: true });
+            window.addEventListener('scroll', updateHeaderScrollState, {passive: true});
         }
 
         // ---- theme toggle (floating sun/moon fab) ----
@@ -3001,10 +3001,10 @@
                 htmlEl.removeAttribute('data-theme');
             }
             if (themeFab) themeFab.setAttribute('aria-pressed', mode === 'dark' ? 'true' : 'false');
-            try { localStorage.setItem('theme', mode); } catch (e) { }
+            try {localStorage.setItem('theme', mode);} catch (e) { }
         }
         let saved = 'light';
-        try { saved = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) { }
+        try {saved = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');} catch (e) { }
         setTheme(saved);
         if (themeFab) {
             themeFab.addEventListener('click', () => {
@@ -3047,7 +3047,7 @@
             if (!cursorActive) return;
             mx = e.clientX; my = e.clientY;
             xyCursor.style.transform = `translate(${mx}px, ${my}px)`;
-            if (reduceMotion) { rx = mx; ry = my; xyRing.style.transform = `translate(${rx}px, ${ry}px) scale(${ringScale})`; }
+            if (reduceMotion) {rx = mx; ry = my; xyRing.style.transform = `translate(${rx}px, ${ry}px) scale(${ringScale})`;}
         });
 
         window.addEventListener('pointerdown', (e) => {
@@ -3058,8 +3058,8 @@
             if (!document.hidden && cursorActive && !reduceMotion && !rafId) ringLoop();
         });
 
-        document.addEventListener('mousedown', () => { if (cursorActive) ringScale = 0.85; });
-        document.addEventListener('mouseup', () => { if (cursorActive) ringScale = 1; });
+        document.addEventListener('mousedown', () => {if (cursorActive) ringScale = 0.85;});
+        document.addEventListener('mouseup', () => {if (cursorActive) ringScale = 1;});
 
         const interactive = document.querySelectorAll('a, button, .btn, .navcta, .chip, .honor-card, .edu-card');
         interactive.forEach(el => {
@@ -3090,7 +3090,7 @@
                         io.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+            }, {threshold: 0.15, rootMargin: '0px 0px -60px 0px'});
             revealEls.forEach(el => io.observe(el));
         } else {
             revealEls.forEach(el => el.classList.add('in-view'));
@@ -3111,7 +3111,7 @@
                         if (navCta) navCta.classList.toggle('active', id === 'contact');
                     }
                 });
-            }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
+            }, {rootMargin: '-40% 0px -50% 0px', threshold: 0});
             sections.forEach(s => spy.observe(s));
         }
 
@@ -3124,7 +3124,7 @@
                     const dy = (e.clientY - r.top - r.height / 2) * 0.25;
                     el.style.transform = `translate(${dx}px, ${dy}px) translateZ(0)`;
                 });
-                el.addEventListener('mouseleave', () => { el.style.transform = ''; });
+                el.addEventListener('mouseleave', () => {el.style.transform = '';});
             });
         }
 
@@ -3138,7 +3138,7 @@
                     const py = (e.clientY - r.top) / r.height - 0.5;
                     el.style.transform = `perspective(700px) rotateX(${py * -6}deg) rotateY(${px * 6}deg) translateY(-3px) translateZ(0)`;
                 });
-                el.addEventListener('mouseleave', () => { el.style.transform = ''; });
+                el.addEventListener('mouseleave', () => {el.style.transform = '';});
             });
         }
 
@@ -3169,7 +3169,7 @@
                         statObs.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.5 });
+            }, {threshold: 0.5});
             statEls.forEach(el => statObs.observe(el));
         }
     </script>
@@ -3199,8 +3199,8 @@
             let resolved = false;     // whether direction (horizontal vs vertical) has been decided
             let startX = 0, startY = 0;
 
-            function pause() { track.classList.add('paused'); }
-            function resume() { track.classList.remove('paused'); }
+            function pause() {track.classList.add('paused');}
+            function resume() {track.classList.remove('paused');}
 
             function setOffset(px, animated) {
                 drag.style.transition = animated ? 'transform .4s cubic-bezier(.16,1,.3,1)' : 'none';
@@ -3238,7 +3238,7 @@
                 if (!dragging) return;
                 setOffset(clamp(e.clientX - startX), false);
             });
-            window.addEventListener('mouseup', () => { if (pointerDown) endDrag(); });
+            window.addEventListener('mouseup', () => {if (pointerDown) endDrag();});
 
             // ---- touch swipe (must not hijack vertical page scrolling) ----
             viewport.addEventListener('touchstart', (e) => {
@@ -3248,7 +3248,7 @@
                 startX = e.touches[0].clientX;
                 startY = e.touches[0].clientY;
                 pause(); // pause preemptively; resumed on touchend regardless of outcome
-            }, { passive: true });
+            }, {passive: true});
 
             viewport.addEventListener('touchmove', (e) => {
                 if (!pointerDown) return;
@@ -3268,14 +3268,14 @@
                     }
                 }
                 if (dragging) setOffset(clamp(dx), false);
-            }, { passive: true });
+            }, {passive: true});
 
             viewport.addEventListener('touchend', endDrag);
             viewport.addEventListener('touchcancel', endDrag);
 
             // ---- hover pause / resume (desktop pointer only) ----
-            viewport.addEventListener('mouseenter', () => { if (!dragging) pause(); });
-            viewport.addEventListener('mouseleave', () => { if (!dragging) resume(); });
+            viewport.addEventListener('mouseenter', () => {if (!dragging) pause();});
+            viewport.addEventListener('mouseleave', () => {if (!dragging) resume();});
 
             // ---- keyboard: nudge, then spring back, mirroring touch/drag feel ----
             viewport.setAttribute('tabindex', '0');
@@ -3285,7 +3285,7 @@
                 pause();
                 setOffset(e.key === 'ArrowLeft' ? MAX_OFFSET : -MAX_OFFSET, true);
                 clearTimeout(viewport._fiKeyTimer);
-                viewport._fiKeyTimer = setTimeout(() => { setOffset(0, true); resume(); }, 420);
+                viewport._fiKeyTimer = setTimeout(() => {setOffset(0, true); resume();}, 420);
             });
         })();
     </script>
@@ -3347,8 +3347,8 @@
             // kept deliberately to just Email + Phone for a clean, minimal back
             if (backList) {
                 const rows = [
-                    { label: 'Email', value: ADL_LINKS.email, href: 'mailto:' + ADL_LINKS.email },
-                    { label: 'Phone', value: ADL_LINKS.phone, href: 'tel:' + ADL_LINKS.phone.replace(/\s+/g, '') }
+                    {label: 'Email', value: ADL_LINKS.email, href: 'mailto:' + ADL_LINKS.email},
+                    {label: 'Phone', value: ADL_LINKS.phone, href: 'tel:' + ADL_LINKS.phone.replace(/\s+/g, '')}
                 ];
                 rows.forEach(row => {
                     const a = document.createElement('a');
@@ -3385,7 +3385,7 @@
                 const scaleY = rect.height / targetRect.height;
                 const dx = (rect.left + rect.width / 2) - (targetRect.left + targetRect.width / 2);
                 const dy = (rect.top + rect.height / 2) - (targetRect.top + targetRect.height / 2);
-                return { scaleX, scaleY, dx, dy };
+                return {scaleX, scaleY, dx, dy};
             }
 
             function openCard() {
@@ -3452,7 +3452,7 @@
                     card.classList.remove('adl-open');
                     card.setAttribute('aria-hidden', 'true');
                     document.body.classList.remove('adl-lock');
-                    if (isFlipped) { cardInner.classList.remove('adl-flipped'); isFlipped = false; }
+                    if (isFlipped) {cardInner.classList.remove('adl-flipped'); isFlipped = false;}
                     setContentVisible(false);
                     return;
                 }
@@ -3470,7 +3470,7 @@
                     card.setAttribute('aria-hidden', 'true');
                     document.body.classList.remove('adl-lock');
                     morphLabel.style.opacity = '0';
-                    if (isFlipped) { cardInner.classList.remove('adl-flipped'); isFlipped = false; }
+                    if (isFlipped) {cardInner.classList.remove('adl-flipped'); isFlipped = false;}
                     // reset inline geometry so the next open() computes cleanly
                     cardMorph.style.transition = 'none';
                     cardMorph.style.transform = 'translate(0,0) scale(1,1)';
@@ -3518,13 +3518,13 @@
             let touchStartY = null;
             card.addEventListener('touchstart', (e) => {
                 touchStartY = e.touches[0].clientY;
-            }, { passive: true });
+            }, {passive: true});
             card.addEventListener('touchend', (e) => {
                 if (touchStartY === null) return;
                 const dy = e.changedTouches[0].clientY - touchStartY;
                 touchStartY = null;
                 if (dy > 70) closeCard();
-            }, { passive: true });
+            }, {passive: true});
 
             // -- keep morph anchored correctly if the viewport resizes while open --
             window.addEventListener('resize', () => {
@@ -3534,4 +3534,5 @@
     </script>
 
 </body>
+
 </html>
