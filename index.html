@@ -321,6 +321,70 @@
     .word { opacity: 1; }
     .glow { display: none; }
   }
+
+  /* ===== Mobile-first pass (phones up to 760px) ===== */
+  @media (max-width: 760px) {
+    html, body { max-width: 100%; }
+    body { font-size: 16px; }
+
+    /* navigation: one compact strip that scrolls sideways, safe-area aware */
+    .nav { top: calc(10px + env(safe-area-inset-top, 0px)); left: 10px; right: 10px; transform: none;
+      width: auto; max-width: none; justify-content: flex-start; scroll-snap-type: x proximity;
+      -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent); mask-image: linear-gradient(90deg, #000 85%, transparent); }
+    .nav a { scroll-snap-align: start; padding: 12px 12px; }
+    .nav a .pct { display: none; }
+    .nav a[aria-current="true"] .pct { display: inline; }
+    .nav .theme { position: sticky; right: 0; background: var(--card); }
+
+    /* hero */
+    .scene { padding-left: 18px; padding-right: 18px; }
+    .hero { padding-top: calc(120px + env(safe-area-inset-top, 0px)); padding-bottom: 130px; align-items: end; }
+    .hero-copy { width: 100%; }
+    .eyebrow { font-size: 11px; line-height: 1.5; }
+    .roles { font-size: 18px; min-height: 2.8em; }
+    .hero-sub { font-size: 15px; }
+    .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; width: 100%; }
+    .stat-num { font-size: 32px; }
+    .stat-label { font-size: 11px; line-height: 1.4; }
+    .ticker-row { font-size: 12px; }
+
+    /* headings and body */
+    .h2 { font-size: 34px; line-height: 1.08; }
+    .lead { font-size: 18px; }
+    .body { font-size: 15px; }
+    .sec-title, .h2 { overflow-wrap: break-word; }
+
+    /* cards and lists stay inside the screen */
+    .tile, .award, .cert, .skill-block, .edu, .faq details, .final { padding: 20px; }
+    .tile p, .award p { font-size: 14px; }
+    .job { padding-bottom: 28px; }
+    .job h3 { font-size: 17px; line-height: 1.3; overflow-wrap: anywhere; }
+    .job p { font-size: 14px; }
+    .org.redact { white-space: normal; }
+    .term { padding: 16px; }
+    .term-head { font-size: 11px; }
+
+    /* contact: email and copy button wrap instead of overflowing */
+    .link { flex-wrap: wrap; padding: 16px; }
+    .link .v { word-break: break-all; text-align: left; }
+    .link-main { flex-wrap: wrap; }
+    .copy-btn { min-height: 44px; }
+    .socials { gap: 8px; }
+
+    /* footer */
+    footer { padding: 28px 18px calc(110px + env(safe-area-inset-bottom, 0px)); }
+    .foot-mark span { font-size: clamp(40px, 13vw, 72px); }
+
+    /* touch targets: nothing smaller than 44px */
+    .faq summary { min-height: 44px; }
+    .chip { min-height: 36px; display: inline-flex; align-items: center; }
+    .btn { min-height: 52px; }
+  }
+  @media (max-width: 360px) {
+    .h2 { font-size: 30px; }
+    .stat-num { font-size: 28px; }
+    .stats { gap: 8px; }
+  }
 </style>
 </head>
 <body>
@@ -338,8 +402,8 @@
   <a href="#education" style="--i:4"><i class="fill" aria-hidden="true"></i><span class="lbl">Education</span><em class="pct">0%</em></a>
   <a href="#certifications" style="--i:5"><i class="fill" aria-hidden="true"></i><span class="lbl">Certifications</span><em class="pct">0%</em></a>
   <a href="#skills" style="--i:6"><i class="fill" aria-hidden="true"></i><span class="lbl">Skills</span><em class="pct">0%</em></a>
-  <a href="#faq" style="--i:6"><i class="fill" aria-hidden="true"></i><span class="lbl">FAQ</span><em class="pct">0%</em></a>
-  <a href="#contact" style="--i:7"><i class="fill" aria-hidden="true"></i><span class="lbl">Contact</span><em class="pct">0%</em></a>
+  <a href="#faq" style="--i:7"><i class="fill" aria-hidden="true"></i><span class="lbl">FAQ</span><em class="pct">0%</em></a>
+  <a href="#contact" style="--i:8"><i class="fill" aria-hidden="true"></i><span class="lbl">Contact</span><em class="pct">0%</em></a>
   <button class="theme" id="theme" type="button" aria-label="Toggle light and dark mode" title="Toggle theme">
     <svg class="ring-svg" viewBox="0 0 44 44" aria-hidden="true"><circle class="ring-bg" cx="22" cy="22" r="19"/><circle class="ring" id="ring" cx="22" cy="22" r="19"/></svg>
     <svg width="16" height="16" viewBox="0 0 256 256" aria-hidden="true"><circle cx="128" cy="128" r="88" fill="none" stroke="currentColor" stroke-width="16"/><path d="M128 40a88 88 0 0 1 0 176z" fill="currentColor"/></svg>
@@ -592,7 +656,7 @@
   var canvas = document.getElementById('field');
   var ctx = canvas.getContext('2d');
   var W = 0, H = 0, DPR = 1;
-  var N = window.innerWidth < 720 ? 1100 : 2400;
+  var N = window.innerWidth < 720 ? 800 : 2400;
   var particles = [];
   var cache = {};
   var currentKey = 'hero';
@@ -623,11 +687,11 @@
 
   /* Bangladesh flag: green field (0, 106, 78), red disc (244, 42, 65) offset to the hoist side */
   function sampleFlag() {
-    var fh = Math.min(H * 0.46, W * 0.36);
+    var fh = Math.min(H * 0.46, W * (W < 760 ? 0.5 : 0.36));
     var fw = fh / 0.6;
     if (fw > W * 0.84) { fw = W * 0.84; fh = fw * 0.6; }
     var x0 = W / 2 - fw / 2, y0 = H * 0.36 - fh / 2;
-    var cx = x0 + fw * 0.42, cy = y0 + fh / 2, r = fh * 0.3;
+    var cx = x0 + fw * 0.45, cy = y0 + fh / 2, r = fw / 5; // official spec: centre at 9/20 of length, radius 1/5 of length
     var step = Math.max(3, Math.round(Math.sqrt((fw * fh) / (N * 0.9))));
     var pts = [];
     for (var y = y0; y < y0 + fh; y += step) {
@@ -1058,11 +1122,20 @@
     btn.addEventListener('click', function () {
       var value = btn.getAttribute('data-copy');
       var done = function () { copyStatus.textContent = 'Email address copied.'; };
-      var failed = function () { copyStatus.textContent = 'Copying is not available here. The address is ' + value + '.'; };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(value).then(done, failed);
+      var failed = function () { copyStatus.textContent = 'Copy did not work here. Please copy this address manually: ' + value; };
+      var fallback = function () {
+        var ta = document.createElement('textarea');
+        ta.value = value; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+        document.body.removeChild(ta);
+        ok ? done() : failed();
+      };
+      if (navigator.clipboard && window.isSecureContext && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(value).then(done, fallback);
       } else {
-        failed();
+        fallback();
       }
     });
   });
