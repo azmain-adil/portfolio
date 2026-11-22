@@ -10,11 +10,11 @@
 <meta property="og:description" content="Marketing, market research, and AI output quality work from a BBA MIS student at the University of Dhaka.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #03100C; --card: #0A1A15; --card-2: #10241D; --line: #1D3A30;
-    --ink: #EEF6F1; --muted: #8FA89E;
+    --ink: #F7FBF9; --muted: #C2D2CA;
     --accent: #2EE6A6; --primary: #FF5468; --ember: #F5C451;
     --ease: cubic-bezier(0.22, 1, 0.36, 1);
     --glow: rgba(46, 230, 166, .14);
@@ -46,6 +46,7 @@
   #field { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
   .veil { position: fixed; inset: 0; z-index: 1; pointer-events: none;
     background: radial-gradient(ellipse 70% 60% at 50% 40%, transparent 40%, var(--bg) 100%); opacity: .6; }
+  :root[data-theme="light"] .glow { display: none; }
   .glow {
     position: fixed; left: 0; top: 0; width: 360px; height: 360px; margin: -180px 0 0 -180px;
     border-radius: 9999px; pointer-events: none; z-index: 2;
@@ -65,8 +66,8 @@
   .nav::-webkit-scrollbar { display: none; }
   .nav a { padding: 8px 13px; border-radius: 9999px; font-size: 13px; font-weight: 500; color: var(--muted); white-space: nowrap; transition: color .3s var(--ease), background-color .3s var(--ease); }
   .nav a:hover { color: var(--ink); background: var(--card-2); }
-  .nav a[aria-current="true"] { color: var(--bg); background: var(--accent); }
-  .nav .theme { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 9999px; color: var(--muted); flex-shrink: 0; }
+  .nav a[aria-current="true"] { color: var(--ink); font-weight: 600; }
+  .nav .theme { position: relative; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 9999px; color: var(--muted); flex-shrink: 0; }
   .nav .theme:hover { color: var(--ink); background: var(--card-2); }
 
   main { position: relative; z-index: 3; }
@@ -79,7 +80,7 @@
   .lead { font-size: clamp(18px, 2vw, 24px); line-height: 1.4; font-weight: 500; text-wrap: balance; max-width: 760px; }
   .body { font-size: 16px; line-height: 1.65; color: var(--muted); max-width: 680px; text-wrap: pretty; }
   .glass {
-    background: color-mix(in srgb, var(--card) 66%, transparent);
+    background: color-mix(in srgb, var(--card) 84%, transparent);
     border: 1px solid var(--line); border-radius: 24px;
     backdrop-filter: blur(16px) saturate(160%); -webkit-backdrop-filter: blur(16px) saturate(160%);
   }
@@ -109,8 +110,8 @@
 
   /* Tagline */
   .tagline-text { font-size: clamp(40px, 7vw, 104px); line-height: 1.02; font-weight: 600; letter-spacing: -.03em; max-width: 1040px; text-wrap: balance; }
-  .word { opacity: .14; transition: opacity .7s var(--ease), color .7s var(--ease); }
-  .word.on { opacity: 1; }
+  .word { font-weight: 300; transition: color .6s var(--ease); }
+  .word.on { font-weight: 650; }
   .word.on.hl { color: var(--primary); }
 
   /* About tiles */
@@ -130,6 +131,9 @@
   .job-date { font-family: 'Geist Mono', monospace; font-size: 12px; color: var(--muted); }
   .job h3 { font-size: 20px; font-weight: 600; margin: 6px 0 4px; }
   .job .org { font-size: 14px; color: var(--muted); }
+  .js .job .org.redact { position: relative; display: inline-block; max-width: 100%; }
+  .js .job .org.redact::after { content: ""; position: absolute; inset: -2px -4px; background: var(--ink);
+    transform: scaleX(calc(1 - var(--r, 0))); transform-origin: right center; border-radius: 3px; }
   .job p { font-size: 15px; color: var(--muted); margin-top: 8px; max-width: 720px; line-height: 1.6; }
   .pill { display: inline-block; margin-top: 10px; padding: 4px 10px; border-radius: 9999px; font-size: 12px; border: 1px solid var(--primary); color: var(--primary); }
 
@@ -177,6 +181,10 @@
   .links { display: grid; gap: 10px; padding: 8px; border-radius: 24px; }
   .link { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 22px; border-radius: 18px; transition: background-color .3s var(--ease), transform .4s var(--ease); }
   .link:hover { background: var(--card-2); }
+  .link-main { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex: 1; min-width: 0; }
+  .copy-btn { flex-shrink: 0; padding: 10px 14px; border-radius: 9999px; border: 1px solid var(--line); font-size: 13px; font-weight: 500; color: var(--ink); background: var(--card-2); min-height: 44px; transition: background-color .3s var(--ease), transform .3s var(--ease); }
+  .copy-btn:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .copy-btn:active { transform: scale(.97); }
   .link .k { font-family: 'Geist Mono', monospace; font-size: 12px; color: var(--muted); }
   .link .v { font-size: 16px; font-weight: 500; word-break: break-word; text-align: right; }
   .socials { display: flex; gap: 10px; margin-top: 12px; }
@@ -188,18 +196,6 @@
   footer { position: relative; z-index: 3; padding: 32px 24px 96px; text-align: center; font-family: 'Geist Mono', monospace; font-size: 12px; color: var(--muted); }
 
 
-  /* Ambient layer: slow orbits and a faint scan line, behind the particles */
-  .orbits { position: fixed; left: 50%; top: 40%; width: min(90vmin, 760px); height: min(90vmin, 760px);
-    transform: translate(-50%, -50%); z-index: 0; pointer-events: none; opacity: .55; }
-  .orbits svg { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--line); overflow: visible; }
-  .orbits g { transform-box: view-box; transform-origin: 400px 400px; }
-  .orbits .r1 { animation: spin 110s linear infinite; }
-  .orbits .r2 { animation: spin 160s linear infinite reverse; }
-  .orbits .r3 { animation: spin 220s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .scan { position: fixed; left: 0; right: 0; top: 0; height: 2px; z-index: 1; pointer-events: none;
-    background: var(--accent); opacity: .12; animation: scan 14s linear infinite; }
-  @keyframes scan { from { transform: translateY(-4px); } to { transform: translateY(100vh); } }
 
   /* Robot terminal: types the resume as you scroll */
   .term { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 28px; padding: 28px; margin-top: 40px; align-items: start; }
@@ -217,6 +213,63 @@
   .term-cur { display: inline-block; width: 8px; height: 16px; background: var(--accent); vertical-align: -3px; animation: blink 1s steps(1) infinite; }
   @media (max-width: 900px) { .term { grid-template-columns: 1fr; } .robot { width: 56px; height: 56px; } }
 
+  /* Ticker */
+  .ticker { position: absolute; left: 0; right: 0; bottom: 0; border-top: 1px solid var(--line); overflow: hidden; padding: 16px 0; background: color-mix(in srgb, var(--bg) 60%, transparent); }
+  .ticker-track { display: flex; width: max-content; animation: tick 46s linear infinite; }
+  .ticker-row { display: flex; align-items: center; gap: 28px; padding-right: 28px; font-family: 'Geist Mono', monospace; font-size: 14px; color: var(--muted); white-space: nowrap; }
+  .ticker-row .dot { color: var(--accent); font-size: 12px; }
+  @keyframes tick { to { transform: translateX(-50%); } }
+  .scene { min-height: 100vh; min-height: 100svh; }
+  .hero { padding-bottom: 120px; }
+  .h2.decode { font-variant-numeric: tabular-nums; }
+
+  /* Section progress: each tab fills as its section scrolls past */
+  .nav a { position: relative; overflow: hidden; animation: navIn .7s var(--ease) both; animation-delay: calc(var(--i) * 70ms + 200ms); }
+  @keyframes navIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
+  .nav .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--accent); opacity: .32;
+    box-shadow: 10px 0 16px -4px var(--accent); pointer-events: none; }
+  .nav .lbl { position: relative; z-index: 1; }
+  .nav .pct { display: none; position: relative; z-index: 1; font-style: normal; font-family: 'Geist Mono', monospace; font-size: 11px; margin-left: 6px; color: var(--accent); }
+  .nav a[aria-current="true"] .pct { display: inline; }
+  .nav a.done .lbl::after { content: " ✓"; color: var(--accent); }
+  .ring-svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+  .ring-bg { fill: none; stroke: var(--line); stroke-width: 2; }
+  .ring { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 119.4; stroke-dashoffset: 119.4; }
+  /* Cinematic hero entrance */
+  .hero-word { display: inline-block; opacity: 0; transform: translateY(.45em); filter: blur(6px);
+    animation: wordIn 1s var(--ease) forwards; animation-delay: var(--d, 0ms); }
+  @keyframes wordIn { to { opacity: 1; transform: none; filter: none; } }
+  .hero-in { animation: rise .9s var(--ease) both; animation-delay: var(--d, 0ms); }
+  @keyframes rise { from { opacity: 0; transform: translateY(16px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+  .hero-copy { will-change: transform; }
+
+  /* Scroll reveals gain a soft focus pull */
+  .rv { filter: blur(6px); transition: opacity .9s var(--ease), transform .9s var(--ease), filter .9s var(--ease); transition-delay: var(--delay, 0ms); }
+  .rv.in { filter: none; }
+
+  /* Pressed states */
+  .btn:active, .chip:active, .link:active { transform: scale(.98); }
+  .tile:active, .win:active, .award:active, .cert:active { transform: scale(.985); }
+
+  /* Link underline sweep */
+  .link .v { background-image: linear-gradient(currentColor, currentColor); background-repeat: no-repeat;
+    background-size: 0% 1px; background-position: 0 100%; transition: background-size .5s var(--ease); }
+  .link:hover .v { background-size: 100% 1px; }
+
+  /* Footer mark reveal */
+  footer { display: grid; justify-items: center; gap: 22px; }
+  .foot-mark { overflow: hidden; width: 100%; text-align: center; }
+  .foot-mark span { display: block; font-size: clamp(44px, 14vw, 180px); font-weight: 600; letter-spacing: -.04em; line-height: .95;
+    transform: translateY(105%); transition: transform 1.2s var(--ease); color: var(--ink); }
+  .foot-mark.in span { transform: none; }
+
+  /* Awards stack on desktop: each card slides over the one before it */
+  @media (min-width: 761px) {
+    .awards { display: block; margin-top: 56px; }
+    .award { position: sticky; top: calc(112px + var(--i, 0) * 16px); background: var(--card); margin-bottom: 14px;
+      box-shadow: 0 -18px 40px -24px color-mix(in srgb, var(--ink) 35%, transparent); }
+  }
+
   /* Reveals */
   .rv { opacity: 0; transform: translateY(40px); transition: opacity .9s var(--ease), transform .9s var(--ease); transition-delay: var(--delay, 0ms); }
   .rv.in { opacity: 1; transform: none; }
@@ -230,6 +283,38 @@
     .scene { padding: 110px 20px; }
   }
   @media (hover: none) { .glow { display: none; } }
+  @media (max-width: 760px) {
+    .nav { top: 10px; padding: 4px; }
+    .nav a { padding: 12px 14px; min-height: 44px; display: inline-flex; align-items: center; font-size: 14px; }
+    .nav .pct { font-size: 10px; }
+    .scene { padding: 104px 18px 110px; }
+    .hero { padding-top: 110px; }
+    .btn { padding: 16px 22px; font-size: 16px; width: 100%; justify-content: center; }
+    .stats { gap: 24px; }
+    .stat-num { font-size: 40px; }
+    .timeline { padding-left: 28px; }
+    .job::before { left: -28px; }
+    .job h3 { font-size: 18px; }
+    .awards {
+      display: grid; grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 84%;
+      overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px;
+      margin: 40px -18px 0; padding: 4px 18px 16px; scrollbar-width: none;
+    }
+    .awards::-webkit-scrollbar { display: none; }
+    .award { scroll-snap-align: start; }
+    .edu { flex-direction: column; align-items: flex-start; gap: 16px; padding: 22px; }
+    .edu .mark { width: 64px; height: 64px; font-size: 18px; border-radius: 16px; }
+    .certs { grid-template-columns: 1fr; }
+    .link { padding: 18px; }
+    .faq summary { font-size: 16px; }
+    .chip { padding: 9px 13px; }
+    .term { padding: 20px; }
+    .term-body { font-size: 13px; min-height: 0; }
+    .socials { flex-wrap: wrap; }
+    .social { width: 48px; height: 48px; }
+    .ticker-row { font-size: 13px; gap: 22px; padding-right: 22px; }
+    .tagline-text { font-size: clamp(34px, 10vw, 56px); }
+  }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
     .rv { opacity: 1; transform: none; }
@@ -240,29 +325,23 @@
 </head>
 <body>
 
-<div class="orbits" aria-hidden="true">
-  <svg viewBox="0 0 800 800">
-    <g class="r1"><circle cx="400" cy="400" r="330" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 10"/></g>
-    <g class="r2"><circle cx="400" cy="400" r="260" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="400" cy="140" r="5" fill="var(--accent)"/></g>
-    <g class="r3"><circle cx="400" cy="400" r="190" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="40 14 4 14"/><circle cx="590" cy="400" r="4" fill="var(--primary)"/></g>
-  </svg>
-</div>
 <canvas id="field" aria-hidden="true"></canvas>
 <div class="veil" aria-hidden="true"></div>
 <div class="glow" id="glow" aria-hidden="true"></div>
-<div class="scan" aria-hidden="true"></div>
 <div class="progress" id="progress" aria-hidden="true"></div>
 
 <nav class="nav" aria-label="Sections">
-  <a href="#top">Azmain</a>
-  <a href="#about">About</a>
-  <a href="#work">Work</a>
-  <a href="#awards">Awards</a>
-  <a href="#education">Education</a>
-  <a href="#skills">Skills</a>
-  <a href="#faq">FAQ</a>
-  <a href="#contact">Contact</a>
+  <a href="#top" style="--i:0"><i class="fill" aria-hidden="true"></i><span class="lbl">Azmain</span><em class="pct">0%</em></a>
+  <a href="#about" style="--i:1"><i class="fill" aria-hidden="true"></i><span class="lbl">About</span><em class="pct">0%</em></a>
+  <a href="#work" style="--i:2"><i class="fill" aria-hidden="true"></i><span class="lbl">Work</span><em class="pct">0%</em></a>
+  <a href="#awards" style="--i:3"><i class="fill" aria-hidden="true"></i><span class="lbl">Awards</span><em class="pct">0%</em></a>
+  <a href="#education" style="--i:4"><i class="fill" aria-hidden="true"></i><span class="lbl">Education</span><em class="pct">0%</em></a>
+  <a href="#certifications" style="--i:5"><i class="fill" aria-hidden="true"></i><span class="lbl">Certifications</span><em class="pct">0%</em></a>
+  <a href="#skills" style="--i:6"><i class="fill" aria-hidden="true"></i><span class="lbl">Skills</span><em class="pct">0%</em></a>
+  <a href="#faq" style="--i:6"><i class="fill" aria-hidden="true"></i><span class="lbl">FAQ</span><em class="pct">0%</em></a>
+  <a href="#contact" style="--i:7"><i class="fill" aria-hidden="true"></i><span class="lbl">Contact</span><em class="pct">0%</em></a>
   <button class="theme" id="theme" type="button" aria-label="Toggle light and dark mode" title="Toggle theme">
+    <svg class="ring-svg" viewBox="0 0 44 44" aria-hidden="true"><circle class="ring-bg" cx="22" cy="22" r="19"/><circle class="ring" id="ring" cx="22" cy="22" r="19"/></svg>
     <svg width="16" height="16" viewBox="0 0 256 256" aria-hidden="true"><circle cx="128" cy="128" r="88" fill="none" stroke="currentColor" stroke-width="16"/><path d="M128 40a88 88 0 0 1 0 176z" fill="currentColor"/></svg>
   </button>
 </nav>
@@ -272,22 +351,23 @@
   <!-- Hero -->
   <section class="scene hero" id="top" data-shape="hero">
     <div class="panel hero-copy">
-      <span class="eyebrow">Azmain Adil · BBA in MIS · University of Dhaka</span>
-      <h1 class="h2 rv in">Marketing and research that holds up under review.</h1>
-      <p class="roles"><span id="role"></span><span class="caret" aria-hidden="true"></span></p>
-      <p class="body hero-sub">I teach marketing to 100+ undergraduates, reached six national semifinals, and review AI output for accuracy, fluency, and Bengali language quality.</p>
-      <div class="hero-row">
+      <span class="eyebrow hero-in" style="--d:120ms">Azmain Adil · BBA in MIS · University of Dhaka</span>
+      <h1 class="h2" id="heroTitle">Marketing and research that holds up under review.</h1>
+      <p class="roles hero-in" style="--d:700ms"><span id="role"></span><span class="caret" aria-hidden="true"></span></p>
+      <p class="body hero-sub hero-in" style="--d:820ms">I teach marketing to 100+ undergraduates, reached six national semifinals, and review AI output for accuracy, fluency, and Bengali language quality.</p>
+      <div class="hero-row hero-in" style="--d:960ms">
         <a class="btn magnet" href="https://drive.google.com/file/d/1gYiAawbX8KiQki3qev0LGdx9UZhlo5_5/view?usp=sharing" target="_blank" rel="noopener noreferrer">
           View resume (PDF)
           <svg width="18" height="18" viewBox="0 0 256 256" aria-hidden="true"><path d="M160 56l56 72-56 72M216 128H40" fill="none" stroke="currentColor" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
       </div>
-      <div class="stats">
+      <div class="stats hero-in" style="--d:1100ms">
         <div><div class="stat-num" data-count="100" data-suffix="+">0</div><div class="stat-label">Students taught</div></div>
         <div><div class="stat-num" data-count="6">0</div><div class="stat-label">National semifinals</div></div>
         <div><div class="stat-num">2028</div><div class="stat-label">Expected graduation</div></div>
       </div>
     </div>
+    <div class="ticker" aria-hidden="true"><div class="ticker-track"><div class="ticker-row"><span>100+ students taught</span><span class="dot" aria-hidden="true">✦</span><span>6 national semifinals</span><span class="dot" aria-hidden="true">✦</span><span>U.S. merit scholarships</span><span class="dot" aria-hidden="true">✦</span><span>Bengali language quality</span><span class="dot" aria-hidden="true">✦</span><span>AI output evaluation</span><span class="dot" aria-hidden="true">✦</span><span>Market research</span><span class="dot" aria-hidden="true">✦</span><span>Excel finance competition</span><span class="dot" aria-hidden="true">✦</span><span>Marketing strategy</span><span class="dot" aria-hidden="true">✦</span></div><div class="ticker-row"><span>100+ students taught</span><span class="dot" aria-hidden="true">✦</span><span>6 national semifinals</span><span class="dot" aria-hidden="true">✦</span><span>U.S. merit scholarships</span><span class="dot" aria-hidden="true">✦</span><span>Bengali language quality</span><span class="dot" aria-hidden="true">✦</span><span>AI output evaluation</span><span class="dot" aria-hidden="true">✦</span><span>Market research</span><span class="dot" aria-hidden="true">✦</span><span>Excel finance competition</span><span class="dot" aria-hidden="true">✦</span><span>Marketing strategy</span><span class="dot" aria-hidden="true">✦</span></div></div></div>
   </section>
 
   <!-- Tagline -->
@@ -336,17 +416,17 @@
 
       <div class="timeline" id="timeline">
         <div class="rail"><div class="rail-fill" id="railFill"></div></div>
-        <div class="job rv"><div class="job-date">Sep 2026 to present</div><h3>Data Trainer, AI Training and Evaluation</h3><div class="org">SME Solutions, Inc. · Remote</div><p>Contributing to AI training projects by completing realistic computer based workflows and evaluating task outputs. Structured annotation and quality evaluation with emphasis on accuracy, consistency, and natural human computer interaction.</p></div>
-        <div class="job rv"><div class="job-date">Oct 2026 to present</div><h3>Bengali Quality Assurance Lead</h3><div class="org">SME Solutions, Inc. · Remote, contractor</div><p>Reviews AI generated content and contributor outputs for accuracy, grammar, fluency, tone, cultural appropriateness, and instruction following. Provides structured feedback and supports quality documentation.</p><span class="pill">Project allocation pending</span></div>
-        <div class="job rv"><div class="job-date">Oct 2026 to present</div><h3>Market Research Expert</h3><div class="org">SME Solutions, Inc. · Remote, contractor</div><p>Expert network covering research methodology, survey design, competitive analysis, market sizing, and evidence quality, with a focus on identifying methodological flaws and unsupported claims.</p><span class="pill">No immediate project yet</span></div>
-        <div class="job rv"><div class="job-date">Oct 2026 to present</div><h3>AI Training Expert</h3><div class="org">Micro1 · Remote</div><p>Video based annotation and evaluation for the Runway Annotations project, reviewing short clips and answering structured Yes or No questions.</p></div>
-        <div class="job rv"><div class="job-date">Oct 2026 to present</div><h3>AI Training Expert</h3><div class="org">Mercor · Remote</div><p>Structured problem solving, task execution, and professional workflows through screen recorded task submissions, following project guidelines to produce accurate training data.</p></div>
-        <div class="job rv"><div class="job-date">Sep 2024 to present</div><h3>Lecturer of Marketing</h3><div class="org">University Coaching Care (UCC Group) · Dhaka</div><p>Delivered marketing curriculum to 100+ undergraduate students across multiple cohorts, and designed lecture materials that simplify STP, the 4Ps, and consumer behavior models.</p></div>
-        <div class="job rv"><div class="job-date">Jan 2026 to Apr 2026</div><h3>Intern</h3><div class="org">Correct Inc. (Testmitro AI and Cqrrect AI) · Remote</div><p>Worked with the core team of an AI first EdTech startup backed by the Bangladesh ICT Division and Orange Corners Bangladesh, on marketing, operations, and communication.</p></div>
-        <div class="job rv"><div class="job-date">Jul 2024 to Aug 2024</div><h3>Proofreader, Business Studies Wing</h3><div class="org">Chorcha · Remote</div><p>Reviewed, edited, and refined 200+ academic business studies pieces for clarity, consistency, and conceptual accuracy.</p></div>
-        <div class="job rv"><div class="job-date">May 2025 to present</div><h3>Senior Executive, Branding and Content</h3><div class="org">DU MIS Club · Dhaka, Bangladesh</div><p>Led branding and content initiatives and coordinated promotional activities to grow the club's visibility and engagement.</p></div>
-        <div class="job rv"><div class="job-date">Nov 2024 to Aug 2025</div><h3>Executive, Human Resources Wing</h3><div class="org">Dhaka University Career Club (DUCC) · Dhaka, Bangladesh</div><p>Increased club event attendance by 30%. Played a core HR role in multiple mega scale events, managing 1,500+ visitors.</p></div>
-        <div class="job rv"><div class="job-date">May 2020 to Dec 2021</div><h3>Cofounder and General Secretary</h3><div class="org">Xenon Science Club · Remote</div><p>Co-founded a virtual science club during the COVID-19 lockdown and grew membership to 500 students. Organized 2 online events and managed content publication for 20 months.</p></div>
+        <div class="job rv"><div class="job-date">Sep 2026 to present</div><h3>Data Trainer, AI Training and Evaluation</h3><div class="org redact">SME Solutions, Inc. · Remote</div><p>Contributing to AI training projects by completing realistic computer based workflows and evaluating task outputs. Structured annotation and quality evaluation with emphasis on accuracy, consistency, and natural human computer interaction.</p></div>
+        <div class="job rv"><div class="job-date">Oct 2026 to present</div><h3>Bengali Quality Assurance Lead</h3><div class="org redact">SME Solutions, Inc. · Remote, contractor</div><p>Reviews AI generated content and contributor outputs for accuracy, grammar, fluency, tone, cultural appropriateness, and instruction following. Provides structured feedback and supports quality documentation.</p><span class="pill">Project allocation pending</span></div>
+        <div class="job rv"><div class="job-date">Oct 2026 to present</div><h3>Market Research Expert</h3><div class="org redact">SME Solutions, Inc. · Remote, contractor</div><p>Expert network covering research methodology, survey design, competitive analysis, market sizing, and evidence quality, with a focus on identifying methodological flaws and unsupported claims.</p><span class="pill">No immediate project yet</span></div>
+        <div class="job rv"><div class="job-date">Oct 2026 to present</div><h3>AI Training Expert</h3><div class="org redact">Micro1 · Remote</div><p>Video based annotation and evaluation for the Runway Annotations project, reviewing short clips and answering structured Yes or No questions.</p></div>
+        <div class="job rv"><div class="job-date">Oct 2026 to present</div><h3>AI Training Expert</h3><div class="org redact">Mercor · Remote</div><p>Structured problem solving, task execution, and professional workflows through screen recorded task submissions, following project guidelines to produce accurate training data.</p></div>
+        <div class="job rv"><div class="job-date">Sep 2024 to present</div><h3>Lecturer of Marketing</h3><div class="org redact">University Coaching Care (UCC Group) · Dhaka</div><p>Delivered marketing curriculum to 100+ undergraduate students across multiple cohorts, and designed lecture materials that simplify STP, the 4Ps, and consumer behavior models.</p></div>
+        <div class="job rv"><div class="job-date">Jan 2026 to Apr 2026</div><h3>Intern</h3><div class="org redact">Correct Inc. (Testmitro AI and Cqrrect AI) · Remote</div><p>Worked with the core team of an AI first EdTech startup backed by the Bangladesh ICT Division and Orange Corners Bangladesh, on marketing, operations, and communication.</p></div>
+        <div class="job rv"><div class="job-date">Jul 2024 to Aug 2024</div><h3>Proofreader, Business Studies Wing</h3><div class="org redact">Chorcha · Remote</div><p>Reviewed, edited, and refined 200+ academic business studies pieces for clarity, consistency, and conceptual accuracy.</p></div>
+        <div class="job rv"><div class="job-date">May 2025 to present</div><h3>Senior Executive, Branding and Content</h3><div class="org redact">DU MIS Club · Dhaka, Bangladesh</div><p>Led branding and content initiatives and coordinated promotional activities to grow the club's visibility and engagement.</p></div>
+        <div class="job rv"><div class="job-date">Nov 2024 to Aug 2025</div><h3>Executive, Human Resources Wing</h3><div class="org redact">Dhaka University Career Club (DUCC) · Dhaka, Bangladesh</div><p>Increased club event attendance by 30%. Played a core HR role in multiple mega scale events, managing 1,500+ visitors.</p></div>
+        <div class="job rv"><div class="job-date">May 2020 to Dec 2021</div><h3>Cofounder and General Secretary</h3><div class="org redact">Xenon Science Club · Remote</div><p>Co-founded a virtual science club during the COVID-19 lockdown and grew membership to 500 students. Organized 2 online events and managed content publication for 20 months.</p></div>
       </div>
     </div>
   </section>
@@ -357,14 +437,14 @@
       <span class="eyebrow rv">Recognition</span>
       <h2 class="h2 rv">Selected awards and competitions.</h2>
       <div class="awards">
-        <div class="glass award tilt rv"><span class="tag">Scholarship · 2025</span><h3>U.S. university scholarships</h3><p>Merit based scholarships from three U.S. universities, Fall 2025 intake, selected through competitive international admissions.</p></div>
-        <div class="glass award tilt rv" style="--delay:60ms"><span class="tag">Scholarship · 2023</span><h3>Dhaka Education Board scholarship</h3><p>Government scholarship awarded on the HSC examination, Business Studies, GPA 5.00 out of 5.00.</p></div>
-        <div class="glass award tilt rv"><span class="tag">Semifinalist · 2025</span><h3>National Talent Fest (NTF) Business Case Competition</h3><p>Data driven business solutions presented in a highly competitive national case competition.</p></div>
-        <div class="glass award tilt rv" style="--delay:60ms"><span class="tag">Semifinalist · 2025</span><h3>Skin'O Business Intelligence Volume II</h3><p>Data driven market analysis for an FMCG client case, out of 120 participating teams.</p></div>
-        <div class="glass award tilt rv"><span class="tag">Semifinalist · 2025</span><h3>Excelerate, national finance Excel competition</h3><p>Financial data cleaning, cross sheet lookups, conditional logic, and pivot analysis on a real banking dataset.</p></div>
-        <div class="glass award tilt rv" style="--delay:60ms"><span class="tag">Semifinalist · 2026</span><h3>Breaking Brand</h3><p>Strategic brand case built on market context, consumer insights, and competitive positioning, under time constraints.</p></div>
-        <div class="glass award tilt rv"><span class="tag">Semifinalist · 2026</span><h3>Idea Hunters 5.0</h3><p>Marketing strategy for StudyIn covering student acquisition, brand positioning, and conversion challenges.</p></div>
-        <div class="glass award tilt rv" style="--delay:60ms"><span class="tag">Semifinalist · 2026</span><h3>BIZSTAR Season V</h3><p>FMCG brand strategy covering consumer trust gaps, pricing, market positioning, and go to market.</p></div>
+        <div class="glass award tilt rv" style="--i:0"><span class="tag">Scholarship · 2025</span><h3>U.S. university scholarships</h3><p>Merit based scholarships from three U.S. universities, Fall 2025 intake, selected through competitive international admissions.</p></div>
+        <div class="glass award tilt rv" style="--i:1; --delay:60ms"><span class="tag">Scholarship · 2023</span><h3>Dhaka Education Board scholarship</h3><p>Government scholarship awarded on the HSC examination, Business Studies, GPA 5.00 out of 5.00.</p></div>
+        <div class="glass award tilt rv" style="--i:2"><span class="tag">Semifinalist · 2025</span><h3>National Talent Fest (NTF) Business Case Competition</h3><p>Data driven business solutions presented in a highly competitive national case competition.</p></div>
+        <div class="glass award tilt rv" style="--i:3; --delay:60ms"><span class="tag">Semifinalist · 2025</span><h3>Skin'O Business Intelligence Volume II</h3><p>Data driven market analysis for an FMCG client case, out of 120 participating teams.</p></div>
+        <div class="glass award tilt rv" style="--i:4"><span class="tag">Semifinalist · 2025</span><h3>Excelerate, national finance Excel competition</h3><p>Financial data cleaning, cross sheet lookups, conditional logic, and pivot analysis on a real banking dataset.</p></div>
+        <div class="glass award tilt rv" style="--i:5; --delay:60ms"><span class="tag">Semifinalist · 2026</span><h3>Breaking Brand</h3><p>Strategic brand case built on market context, consumer insights, and competitive positioning, under time constraints.</p></div>
+        <div class="glass award tilt rv" style="--i:6"><span class="tag">Semifinalist · 2026</span><h3>Idea Hunters 5.0</h3><p>Marketing strategy for StudyIn covering student acquisition, brand positioning, and conversion challenges.</p></div>
+        <div class="glass award tilt rv" style="--i:7; --delay:60ms"><span class="tag">Semifinalist · 2026</span><h3>BIZSTAR Season V</h3><p>FMCG brand strategy covering consumer trust gaps, pricing, market positioning, and go to market.</p></div>
       </div>
     </div>
   </section>
@@ -470,7 +550,8 @@
         </div>
         <div class="rv" style="--delay:120ms">
           <div class="links glass">
-            <a class="link" href="mailto:azmainadil23@gmail.com"><span class="k">EMAIL</span><span class="v">azmainadil23@gmail.com</span></a>
+            <p class="sr" id="copyStatus" role="status" aria-live="polite"></p>
+            <div class="link"><a class="link-main" href="mailto:azmainadil23@gmail.com"><span class="k">EMAIL</span><span class="v">azmainadil23@gmail.com</span></a><button class="copy-btn" type="button" data-copy="azmainadil23@gmail.com">Copy</button></div>
             <a class="link" href="tel:+8801731504405"><span class="k">PHONE</span><span class="v">+880 1731 504405</span></a>
             <a class="link" href="https://wa.me/8801731504405" target="_blank" rel="noopener noreferrer"><span class="k">WHATSAPP</span><span class="v">Send a message</span></a>
           </div>
@@ -487,7 +568,10 @@
 
 </main>
 
-<footer>Azmain Adil © 2026 · MIS, University of Dhaka</footer>
+<footer>
+  <div class="foot-mark" id="footMark" aria-hidden="true"><span>Azmain Adil</span></div>
+  <div>Azmain Adil © 2026 · MIS, University of Dhaka</div>
+</footer>
 
 <script>
 (function () {
@@ -548,7 +632,7 @@
     var pts = [];
     for (var y = y0; y < y0 + fh; y += step) {
       for (var x = x0; x < x0 + fw; x += step) {
-        pts.push([x, y, Math.hypot(x - cx, y - cy) < r ? 1 : 0]);
+        pts.push([x, y, Math.hypot(x - cx, y - cy) < r ? 1 : 0, (x - x0) / fw]);
       }
     }
     return pts;
@@ -601,6 +685,7 @@
       p.tx = q[0] + (Math.random() - 0.5) * 3;
       p.ty = q[1] + (Math.random() - 0.5) * 3;
       p.fc = q.length > 2 ? q[2] : -1;
+      p.fu = q.length > 3 ? q[3] : 0;
       if (instant) { p.x = p.tx; p.y = p.ty; p.vx = 0; p.vy = 0; }
     }
   }
@@ -620,7 +705,7 @@
         x: Math.random() * W, y: Math.random() * H, vx: 0, vy: 0,
         tx: 0, ty: 0, ph: Math.random() * Math.PI * 2,
         s: 1.3 + Math.random() * 1.7,
-        fc: -1,
+        fc: -1, fu: 0,
         h: pickHue()
       });
     }
@@ -636,6 +721,12 @@
       var p = particles[i];
       var wx = Math.sin(t * 1.4 + p.ph) * 5 + Math.cos(t * 0.6 + p.ph * 2.1) * 3;
       var wy = Math.cos(t * 1.2 + p.ph * 1.7) * 5 + Math.sin(t * 0.7 + p.ph) * 3;
+      if (p.fc >= 0) {
+        // the flag ripples in the wind: the free edge moves most, the hoist stays fixed
+        var ph = Math.sin(t * 2.2 - p.fu * 5);
+        wy += ph * p.fu * 20;
+        wx += Math.cos(t * 2.2 - p.fu * 5) * p.fu * 6;
+      }
       var gx = p.tx + wx, gy = p.ty + wy;
       p.vx += (gx - p.x) * 0.05;
       p.vy += (gy - p.y) * 0.05;
@@ -668,8 +759,17 @@
     ctx.globalCompositeOperation = 'source-over';
   }
 
-  var rafId = 0;
-  function loop() { draw(); rafId = requestAnimationFrame(loop); }
+  var rafId = 0, running = false;
+  function loop() {
+    if (!running) return;
+    draw();
+    rafId = requestAnimationFrame(loop);
+  }
+  function startLoop() { if (!running && !reduce) { running = true; loop(); } }
+  function stopLoop() { running = false; cancelAnimationFrame(rafId); }
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) stopLoop(); else startLoop();
+  });
 
   /* Scroll state */
   var progress = document.getElementById('progress');
@@ -717,13 +817,32 @@
     }
 
     syncTerm();
+    navSync();
 
-    var line = window.innerHeight * 0.66;
+    // hidden details: each organisation name is un-redacted as its job scrolls up the screen
+    var vhh = window.innerHeight;
+    orgs.forEach(function (o) {
+      var t = o.getBoundingClientRect().top;
+      var k = Math.min(1, Math.max(0, (vhh * 0.88 - t) / (vhh * 0.5)));
+      o.style.setProperty('--r', reduce ? 1 : k.toFixed(3));
+    });
+
+    // hero copy drifts slower than the page and fades out as you leave the hero
+    var heroCopy = document.querySelector('.hero-copy');
+    if (heroCopy && !reduce) {
+      var hp = Math.min(1, window.scrollY / (window.innerHeight * 0.9));
+      heroCopy.style.transform = 'translate3d(0,' + (window.scrollY * 0.12).toFixed(1) + 'px,0)';
+      heroCopy.style.opacity = (1 - hp * 0.7).toFixed(3);
+    }
+
+    // each word sharpens from light to bold as it moves up through the screen
+    var vh = window.innerHeight;
     spans.forEach(function (s, idx) {
-      if (!s.classList.contains('on') && s.getBoundingClientRect().top < line) {
-        s.classList.add('on');
-        if (idx % 7 === 3) s.classList.add('hl');
-      }
+      if (reduce) return;
+      var top = s.getBoundingClientRect().top;
+      var k = Math.min(1, Math.max(0, (vh * 0.9 - top) / (vh * 0.5)));
+      s.style.fontWeight = Math.round(300 + k * 350);
+      if (k >= 1 && idx % 7 === 3) s.classList.add('hl');
     });
   }
 
@@ -754,6 +873,69 @@
     clearTimeout(termBusy);
     termBusy = setTimeout(function () { termEl.classList.remove('busy'); }, 450);
   }
+
+  /* Section progress for the nav tabs */
+  var navMap = [];
+  document.querySelectorAll('.nav a[href^="#"]').forEach(function (a) {
+    var id = a.getAttribute('href').slice(1);
+    var el = id === 'top' ? document.getElementById('top') : document.getElementById(id);
+    if (el) navMap.push({ id: id, a: a, el: el, fill: a.querySelector('.fill'), pct: a.querySelector('.pct') });
+  });
+  var ring = document.getElementById('ring');
+  var RING_LEN = 119.4;
+  function navSync() {
+    var vh = window.innerHeight;
+    var y = window.scrollY;
+    var maxY = document.documentElement.scrollHeight - vh;
+    var atBottom = y >= maxY - 4;
+    navMap.forEach(function (m, idx) {
+      var r = m.el.getBoundingClientRect();
+      var H = Math.max(1, r.height);
+      var p;
+      if (m.id === 'top') {
+        p = Math.min(1, Math.max(0, y / H));
+      } else {
+        // fill starts when the section top crosses the middle of the screen,
+        // and reaches 100% when its bottom crosses the middle of the screen
+        var absTop = r.top + y;
+        p = Math.min(1, Math.max(0, (y + vh / 2 - absTop) / H));
+      }
+      if (atBottom && idx === navMap.length - 1) p = 1;
+      m.fill.style.width = (p * 100).toFixed(1) + '%';
+      m.a.classList.toggle('done', p >= 0.999);
+      m.pct.textContent = Math.round(p * 100) + '%';
+    });
+    var pageP = maxY > 0 ? Math.min(1, y / maxY) : 0;
+    ring.style.strokeDashoffset = (RING_LEN * (1 - pageP)).toFixed(2);
+  }
+
+  /* Hero title: split into words for the staggered entrance */
+  var heroTitle = document.getElementById('heroTitle');
+  if (heroTitle && !reduce) {
+    var hWords = heroTitle.textContent.trim().split(/\s+/);
+    heroTitle.textContent = '';
+    hWords.forEach(function (w, i) {
+      var sp = document.createElement('span');
+      sp.className = 'hero-word';
+      sp.style.setProperty('--d', (200 + i * 90) + 'ms');
+      sp.textContent = w;
+      heroTitle.appendChild(sp);
+      if (i < hWords.length - 1) heroTitle.appendChild(document.createTextNode(' '));
+    });
+  }
+
+  /* Footer mark reveal */
+  var footMark = document.getElementById('footMark');
+  if (footMark) {
+    var fmIO = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+    }, { threshold: 0.4 });
+    if (reduce) footMark.classList.add('in'); else fmIO.observe(footMark);
+  }
+
+  /* Redacted organisation names */
+  var orgs = Array.prototype.slice.call(document.querySelectorAll('.org.redact'));
+  if (reduce) orgs.forEach(function (o) { o.style.setProperty('--r', 1); });
 
   /* Tagline words */
   var tWords = tagline.textContent.trim().split(/\s+/);
@@ -814,9 +996,30 @@
   /* Reveals */
   var rvIO = new IntersectionObserver(function (entries, obs) {
     entries.forEach(function (e) {
-      if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        if (e.target.classList.contains('h2')) scramble(e.target);
+        obs.unobserve(e.target);
+      }
     });
   }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
+
+  function scramble(el) {
+    if (reduce) return;
+    var finalText = el.textContent, glyphs = 'ABCDEFGHJKLMNOPQRSTUVWXYZ#/*+=', frame = 0, frames = 22;
+    el.classList.add('decode');
+    var id = setInterval(function () {
+      frame++;
+      var out = '';
+      for (var i = 0; i < finalText.length; i++) {
+        var ch = finalText.charAt(i);
+        if (ch === ' ' || i < (finalText.length * frame) / frames) out += ch;
+        else out += glyphs.charAt(Math.floor(Math.random() * glyphs.length));
+      }
+      el.textContent = out;
+      if (frame >= frames) { clearInterval(id); el.textContent = finalText; el.classList.remove('decode'); }
+    }, 28);
+  }
   document.querySelectorAll('.rv').forEach(function (el) {
     if (!el.classList.contains('in')) rvIO.observe(el);
   });
@@ -849,6 +1052,21 @@
     });
   }
 
+  /* Copy email: only reports success when the clipboard write actually succeeded */
+  var copyStatus = document.getElementById('copyStatus');
+  document.querySelectorAll('.copy-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var value = btn.getAttribute('data-copy');
+      var done = function () { copyStatus.textContent = 'Email address copied.'; };
+      var failed = function () { copyStatus.textContent = 'Copying is not available here. The address is ' + value + '.'; };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(value).then(done, failed);
+      } else {
+        failed();
+      }
+    });
+  });
+
   /* Boot */
   window.addEventListener('scroll', onScroll, { passive: true });
   var rz;
@@ -861,7 +1079,7 @@
     initParticles();
     resize();
     assign('hero', true);
-    if (reduce) { draw(); } else { loop(); }
+    if (reduce) { draw(); } else { startLoop(); }
     onScroll();
   });
 })();
