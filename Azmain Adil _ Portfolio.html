@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Azmain Adil | BBA in MIS, University of Dhaka</title>
+<meta name="description" content="Azmain Adil, BBA student in Management Information Systems at the University of Dhaka. Marketing education, market research, business case competitions, Bengali language quality, and AI evaluation.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Azmain Adil | Marketing and research that holds up under review">
+<meta property="og:description" content="Marketing, market research, and AI output quality work from a BBA MIS student at the University of Dhaka.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #000000; --card: #181818; --card-2: #1F1F1F; --line: #272727;
+    --ink: #FFFFFF; --muted: #9B9B9B; --acid: #C6FF3D; --violet: #8B7CFF;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --glow: rgba(139, 124, 255, .18);
+    color-scheme: dark;
+  }
+  :root[data-theme="light"] {
+    --bg: #F4F1EA; --card: #FFFFFF; --card-2: #FBFAF6; --line: #DCD7CB;
+    --ink: #111111; --muted: #5E5A50; --acid: #3E8A00; --violet: #4B3BD9;
+    --glow: rgba(75, 59, 217, .12);
+    color-scheme: light;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Geist', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--ink);
+    overflow-x: hidden; -webkit-font-smoothing: antialiased;
+    transition: background-color .4s var(--ease), color .4s var(--ease);
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  svg { display: block; }
+  :focus-visible { outline: 2px solid var(--violet); outline-offset: 3px; }
+  .mono { font-family: 'Geist Mono', ui-monospace, monospace; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+  /* Living particle field, drawn on canvas */
+  #field { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
+  .veil { position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(ellipse 70% 60% at 50% 40%, transparent 40%, var(--bg) 100%); opacity: .55; }
+
+  /* Pointer glow */
+  .glow {
+    position: fixed; left: 0; top: 0; width: 320px; height: 320px; margin: -160px 0 0 -160px;
+    border-radius: 9999px; pointer-events: none; z-index: 2;
+    background: radial-gradient(circle, var(--glow), transparent 65%);
+    transition: opacity .4s var(--ease);
+  }
+
+  /* Progress */
+  .progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 60; transform-origin: 0 50%; transform: scaleX(0); background: linear-gradient(90deg, var(--violet), var(--acid)); }
+
+  /* Nav */
+  .nav {
+    position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 50;
+    display: flex; align-items: center; gap: 4px; padding: 6px;
+    background: color-mix(in srgb, var(--card) 70%, transparent);
+    border: 1px solid var(--line); border-radius: 9999px;
+    backdrop-filter: blur(18px) saturate(160%); -webkit-backdrop-filter: blur(18px) saturate(160%);
+    max-width: calc(100vw - 24px); overflow-x: auto; scrollbar-width: none;
+    transition: background-color .4s var(--ease);
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a { padding: 8px 14px; border-radius: 9999px; font-size: 13px; font-weight: 500; color: var(--muted); white-space: nowrap; transition: color .3s var(--ease), background-color .3s var(--ease); }
+  .nav a:hover { color: var(--ink); background: var(--card-2); }
+  .nav a[aria-current="true"] { color: var(--bg); background: var(--ink); }
+  .nav .theme { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 9999px; color: var(--muted); flex-shrink: 0; }
+  .nav .theme:hover { color: var(--ink); background: var(--card-2); }
+
+  main { position: relative; z-index: 3; }
+
+  /* Scenes */
+  .scene { position: relative; min-height: 100vh; display: grid; place-items: center; padding: 120px 24px; }
+  .panel { width: min(1040px, 100%); }
+  .eyebrow { font-family: 'Geist Mono', monospace; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--violet); margin-bottom: 16px; display: inline-block; }
+  .h2 { font-size: clamp(36px, 5.2vw, 68px); line-height: 1.02; font-weight: 600; letter-spacing: -.02em; text-wrap: balance; }
+  .lead { font-size: clamp(18px, 2vw, 24px); line-height: 1.4; font-weight: 500; text-wrap: balance; max-width: 760px; }
+  .body { font-size: 16px; line-height: 1.65; color: var(--muted); max-width: 680px; text-wrap: pretty; }
+  .glass {
+    background: color-mix(in srgb, var(--card) 62%, transparent);
+    border: 1px solid var(--line); border-radius: 24px;
+    backdrop-filter: blur(16px) saturate(160%); -webkit-backdrop-filter: blur(16px) saturate(160%);
+  }
+
+  /* Hero */
+  .hero { align-items: end; padding-bottom: 96px; }
+  .hero-copy { width: min(860px, 100%); }
+  .roles { font-size: clamp(18px, 2.2vw, 26px); font-weight: 500; color: var(--ink); min-height: 1.4em; margin-top: 18px; }
+  .roles .caret { display: inline-block; width: 2px; height: 1em; background: var(--acid); margin-left: 4px; vertical-align: -3px; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .hero-sub { margin-top: 18px; }
+  .hero-row { display: flex; flex-wrap: wrap; gap: 24px; align-items: center; margin-top: 36px; }
+  .stats { display: flex; gap: 36px; margin-top: 40px; flex-wrap: wrap; }
+  .stat-num { font-size: clamp(36px, 4.4vw, 56px); font-weight: 600; letter-spacing: -.02em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .stat-label { font-size: 13px; color: var(--muted); margin-top: 8px; font-family: 'Geist Mono', monospace; }
+  .hint { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); font-family: 'Geist Mono', monospace; font-size: 12px; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .hint i { width: 1px; height: 36px; background: linear-gradient(var(--muted), transparent); animation: drop 2s var(--ease) infinite; }
+  @keyframes drop { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px; border-radius: 9999px;
+    font-weight: 600; font-size: 15px; background: var(--acid); color: #0a0a0a;
+    transition: transform .4s var(--ease), box-shadow .4s var(--ease);
+    will-change: transform;
+  }
+  .btn:hover { box-shadow: 0 0 0 6px color-mix(in srgb, var(--acid) 20%, transparent); }
+  .btn svg { transition: transform .4s var(--ease); }
+  .btn:hover svg { transform: translateX(4px); }
+  .btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+
+  /* Tagline */
+  .tagline-text { font-size: clamp(40px, 7vw, 104px); line-height: 1.02; font-weight: 600; letter-spacing: -.03em; max-width: 1040px; text-wrap: balance; }
+  .word { opacity: .14; transition: opacity .7s var(--ease), color .7s var(--ease); }
+  .word.on { opacity: 1; }
+  .word.on.hl { color: var(--acid); }
+
+  /* About tiles */
+  .tiles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 56px; }
+  .tile { padding: 28px; transform-style: preserve-3d; transition: transform .5s var(--ease), border-color .4s var(--ease); }
+  .tile h3 { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+  .tile p { font-size: 15px; color: var(--muted); line-height: 1.55; }
+  .tile .idx { font-family: 'Geist Mono', monospace; font-size: 12px; color: var(--acid); display: block; margin-bottom: 36px; }
+
+  /* Timeline */
+  .timeline { position: relative; margin-top: 56px; padding-left: 36px; }
+  .timeline .rail { position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: var(--line); }
+  .timeline .rail-fill { position: absolute; inset: 0; background: linear-gradient(var(--violet), var(--acid)); transform: scaleY(0); transform-origin: top; }
+  .job { position: relative; padding: 0 0 36px; }
+  .job::before { content: ""; position: absolute; left: -36px; top: 6px; width: 16px; height: 16px; border-radius: 9999px; background: var(--bg); border: 2px solid var(--violet); transition: background-color .4s var(--ease), transform .4s var(--ease); }
+  .job.live::before { background: var(--acid); border-color: var(--acid); }
+  .job-date { font-family: 'Geist Mono', monospace; font-size: 12px; color: var(--muted); }
+  .job h3 { font-size: 20px; font-weight: 600; margin: 6px 0 4px; }
+  .job .org { font-size: 14px; color: var(--muted); }
+  .job p { font-size: 15px; color: var(--muted); margin-top: 8px; max-width: 720px; line-height: 1.6; }
+  .pill { display: inline-block; margin-top: 10px; padding: 4px 10px; border-radius: 9999px; font-size: 12px; border: 1px solid var(--acid); color: var(--acid); }
+
+  /* Wins grid */
+  .wins { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 56px; }
+  .win { padding: 24px; transform-style: preserve-3d; transition: transform .5s var(--ease); }
+  .win .tag { font-family: 'Geist Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--acid); }
+  .win h3 { font-size: 18px; font-weight: 600; margin: 10px 0 6px; }
+  .win p { font-size: 14px; color: var(--muted); line-height: 1.55; }
+
+  /* Education */
+  .edu { display: flex; gap: 24px; align-items: center; padding: 32px; margin-top: 56px; }
+  .edu .mark { width: 88px; height: 88px; border-radius: 22px; display: grid; place-items: center; background: var(--card-2); border: 1px solid var(--line); font-family: 'Geist Mono', monospace; font-size: 28px; color: var(--violet); flex-shrink: 0; }
+  .edu h3 { font-size: 22px; font-weight: 600; }
+  .edu p { color: var(--muted); margin-top: 6px; }
+
+  /* Certs */
+  .certs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 56px; }
+  .cert { padding: 22px; }
+  .cert .who { font-family: 'Geist Mono', monospace; font-size: 11px; color: var(--muted); }
+  .cert h3 { font-size: 16px; font-weight: 600; margin: 12px 0 14px; line-height: 1.35; }
+  .cert .yr { font-size: 13px; color: var(--acid); font-family: 'Geist Mono', monospace; }
+
+  /* Skills */
+  .skills { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 56px; }
+  .skill-block { padding: 26px; }
+  .skill-block h3 { font-size: 16px; font-weight: 600; margin-bottom: 16px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { padding: 7px 12px; border-radius: 9999px; font-size: 13px; background: var(--card-2); border: 1px solid var(--line); transition: transform .35s var(--ease), background-color .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease); }
+  .chip:hover { transform: translateY(-3px) scale(1.04); background: var(--acid); color: #0a0a0a; border-color: var(--acid); }
+
+  /* FAQ */
+  .faq { display: grid; gap: 10px; margin-top: 56px; }
+  .faq details { padding: 20px 24px; border-radius: 18px; }
+  .faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-weight: 600; font-size: 17px; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; font-family: 'Geist Mono', monospace; font-size: 22px; color: var(--violet); transition: transform .5s var(--ease); }
+  .faq details[open] summary::after { transform: rotate(45deg); }
+  .faq details p { margin-top: 12px; font-size: 15px; color: var(--muted); line-height: 1.6; }
+
+  /* Contact */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; margin-top: 56px; align-items: start; }
+  .links { display: grid; gap: 10px; }
+  .link { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 22px; border-radius: 18px; transition: background-color .3s var(--ease), transform .4s var(--ease); }
+  .link:hover { background: var(--card-2); }
+  .link .k { font-family: 'Geist Mono', monospace; font-size: 12px; color: var(--muted); }
+  .link .v { font-size: 16px; font-weight: 500; word-break: break-word; text-align: right; }
+  .socials { display: flex; gap: 10px; margin-top: 12px; }
+  .social { width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; background: var(--card-2); border: 1px solid var(--line); transition: transform .4s var(--ease), background-color .3s var(--ease); }
+  .social:hover { background: var(--violet); color: #fff; border-color: var(--violet); }
+  .social svg { width: 20px; height: 20px; fill: currentColor; }
+  .social svg.stroke { fill: none; stroke: currentColor; stroke-width: 2; }
+  .final { margin-top: 96px; padding: 48px; display: flex; flex-direction: column; gap: 22px; align-items: flex-start; }
+  .final h3 { font-size: clamp(30px, 4vw, 52px); font-weight: 600; letter-spacing: -.02em; line-height: 1.05; text-wrap: balance; }
+  .magnet { display: inline-block; will-change: transform; }
+  footer { position: relative; z-index: 3; padding: 32px 24px 96px; text-align: center; font-family: 'Geist Mono', monospace; font-size: 12px; color: var(--muted); }
+
+  /* Reveals */
+  .rv { opacity: 0; transform: translateY(40px); transition: opacity .9s var(--ease), transform .9s var(--ease); transition-delay: var(--delay, 0ms); }
+  .rv.in { opacity: 1; transform: none; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .tiles, .wins, .certs, .skills, .contact-grid { grid-template-columns: 1fr; }
+    .contact-grid { gap: 32px; }
+    .scene { padding: 110px 20px; }
+    .hint { display: none; }
+    .final { padding: 28px; }
+  }
+  @media (hover: none) { .glow { display: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+    .rv { opacity: 1; transform: none; }
+    .word { opacity: 1; }
+    .glow { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="field" aria-hidden="true"></canvas>
+<div class="veil" aria-hidden="true"></div>
+<div class="glow" id="glow" aria-hidden="true"></div>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<nav class="nav" aria-label="Sections">
+  <a href="#top">Azmain</a>
+  <a href="#about">About</a>
+  <a href="#work">Work</a>
+  <a href="#wins">Wins</a>
+  <a href="#skills">Skills</a>
+  <a href="#faq">FAQ</a>
+  <a href="#contact">Contact</a>
+  <button class="theme" id="theme" type="button" aria-label="Toggle light and dark mode" title="Toggle theme">
+    <svg width="16" height="16" viewBox="0 0 256 256" aria-hidden="true"><circle cx="128" cy="128" r="88" fill="none" stroke="currentColor" stroke-width="16"/><path d="M128 40a88 88 0 0 1 0 176z" fill="currentColor"/></svg>
+  </button>
+</nav>
+
+<main>
+
+  <!-- Hero -->
+  <section class="scene hero" id="top" data-shape="hero">
+    <div class="panel hero-copy">
+      <span class="eyebrow">Azmain Adil · BBA in MIS · University of Dhaka</span>
+      <h1 class="h2 rv in">Marketing and research that holds up under review.</h1>
+      <p class="roles" aria-live="off"><span id="role"></span><span class="caret" aria-hidden="true"></span></p>
+      <p class="body hero-sub">I teach marketing to 100+ undergraduates, reached six national semifinals, and review AI output for accuracy, fluency, and Bengali language quality.</p>
+      <div class="hero-row">
+        <a class="btn magnet" href="https://drive.google.com/file/d/1gYiAawbX8KiQki3qev0LGdx9UZhlo5_5/view?usp=sharing" target="_blank" rel="noopener noreferrer">
+          View resume (PDF)
+          <svg width="18" height="18" viewBox="0 0 256 256" aria-hidden="true"><path d="M160 56l56 72-56 72M216 128H40" fill="none" stroke="currentColor" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <div class="stats">
+        <div><div class="stat-num" data-count="100" data-suffix="+">0</div><div class="stat-label">Students taught</div></div>
+        <div><div class="stat-num" data-count="6">0</div><div class="stat-label">National semifinals</div></div>
+        <div><div class="stat-num">2028</div><div class="stat-label">Expected graduation</div></div>
+      </div>
+    </div>
+    <div class="hint" aria-hidden="true"><span>scroll</span><i></i></div>
+  </section>
+
+  <!-- Tagline -->
+  <section class="scene" data-shape="meet" aria-label="Tagline">
+    <div class="panel">
+      <p class="tagline-text" id="tagline">I work where business strategy, research, and the quality of AI output meet.</p>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="scene" id="about" data-shape="about">
+    <div class="panel">
+      <span class="eyebrow rv">About</span>
+      <h2 class="h2 rv">Strong business work needs a second look.</h2>
+      <p class="lead rv" style="margin-top:24px">Market research, case analysis, and AI output often look finished before they are accurate.</p>
+      <p class="body rv" style="margin-top:16px">I build the analysis myself when it is needed, and I review other people's output for accuracy, evidence, and clarity. I study Management Information Systems at the University of Dhaka, so I look at how information systems support business decisions.</p>
+      <div class="tiles">
+        <div class="glass tile tilt rv"><span class="idx">01</span><h3>Frameworks that stick</h3><p>Taught STP, the 4Ps, and consumer behavior models to 100+ undergraduate students.</p></div>
+        <div class="glass tile tilt rv" style="--delay:80ms"><span class="idx">02</span><h3>Analysis under competition</h3><p>Semifinalist in six national business case, brand strategy, and Excel competitions.</p></div>
+        <div class="glass tile tilt rv" style="--delay:160ms"><span class="idx">03</span><h3>Quality control for AI output</h3><p>Review AI generated content for accuracy, consistency, grammar, tone, and instruction following.</p></div>
+        <div class="glass tile tilt rv" style="--delay:240ms"><span class="idx">04</span><h3>Bengali language quality</h3><p>Native Bengali speaker, selected as a remote contractor for Bengali language quality assurance. Project allocation pending.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Work -->
+  <section class="scene" id="work" data-shape="work">
+    <div class="panel">
+      <span class="eyebrow rv">Experience</span>
+      <h2 class="h2 rv">Recent work.</h2>
+      <div class="timeline" id="timeline">
+        <div class="rail"><div class="rail-fill" id="railFill"></div></div>
+        <div class="job rv"><div class="job-date">Sep 2026 to present</div><h3>Data Trainer, AI Training and Evaluation</h3><div class="org">SME Solutions, Inc. · Remote</div><p>Structured annotation and quality evaluation of task outputs, focused on accuracy and consistency.</p></div>
+        <div class="job rv"><div class="job-date">Oct 2026 to present</div><h3>Bengali Quality Assurance Lead</h3><div class="org">SME Solutions, Inc. · Remote, contractor</div><p>Reviews AI generated Bengali content for accuracy, fluency, tone, and instruction following.</p><span class="pill">Project allocation pending</span></div>
+        <div class="job rv"><div class="job-date">Oct 2026 to present</div><h3>Market Research Expert</h3><div class="org">SME Solutions, Inc. · Remote, contractor</div><p>Expert network that evaluates AI generated research for methodology, unsupported claims, and evidence quality.</p><span class="pill">No project available yet</span></div>
+        <div class="job rv"><div class="job-date">Oct 2026 to present</div><h3>AI Training Expert</h3><div class="org">Micro1 · Remote</div><p>Video annotation for the Runway Annotations project, reviewing short clips and answering structured Yes or No questions.</p></div>
+        <div class="job rv"><div class="job-date">Sep 2024 to present</div><h3>Lecturer of Marketing</h3><div class="org">University Coaching Care (UCC Group) · Dhaka</div><p>Taught 100+ undergraduate students across cohorts and designed lecture materials that make core frameworks easier to follow.</p></div>
+        <div class="job rv"><div class="job-date">Jan 2026 to Apr 2026</div><h3>Intern</h3><div class="org">Correct Inc. · Remote</div><p>Worked with the core team of an EdTech startup backed by the Bangladesh ICT Division, on marketing, operations, and communication.</p></div>
+        <div class="job rv"><div class="job-date">May 2025 to present</div><h3>Senior Executive, Branding and Content</h3><div class="org">DU MIS Club · Dhaka</div><p>Leads branding and content initiatives that raise the club's visibility and engagement.</p></div>
+        <div class="job rv"><div class="job-date">Nov 2024 to Aug 2025</div><h3>Executive, Human Resources</h3><div class="org">Dhaka University Career Club (DUCC) · Dhaka</div><p>Contributed to a 30% increase in club event attendance and held a core HR role across mega events with 1,500+ visitors.</p></div>
+        <div class="job rv"><div class="job-date">Jul 2024 to Aug 2024</div><h3>Proofreader, Business Studies Wing</h3><div class="org">Chorcha · Remote</div><p>Proofread and refined 200+ pieces of academic business studies content for clarity and conceptual accuracy.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Wins -->
+  <section class="scene" id="wins" data-shape="wins">
+    <div class="panel">
+      <span class="eyebrow rv">Recognition</span>
+      <h2 class="h2 rv">Selected recognition.</h2>
+      <div class="wins">
+        <div class="glass win tilt rv"><span class="tag">Scholarship · 2026</span><h3>U.S. university scholarships</h3><p>Merit based scholarships from three U.S. universities, Fall 2025 intake.</p></div>
+        <div class="glass win tilt rv" style="--delay:60ms"><span class="tag">Scholarship · 2023</span><h3>Dhaka Education Board scholarship</h3><p>Awarded on the HSC examination, Business Studies, GPA 5.00 out of 5.00.</p></div>
+        <div class="glass win tilt rv"><span class="tag">Semifinalist · 2025</span><h3>National Talent Fest (NTF) Business Case Competition</h3><p>Business solutions built on data, presented in a national-level case competition.</p></div>
+        <div class="glass win tilt rv" style="--delay:60ms"><span class="tag">Semifinalist · 2025</span><h3>Skin'O Business Intelligence Volume II</h3><p>Market analysis for an FMCG client case, out of 120 teams.</p></div>
+        <div class="glass win tilt rv"><span class="tag">Semifinalist · 2025</span><h3>Excelerate, national finance Excel competition</h3><p>Financial data cleaning, cross sheet lookups, conditional logic, and pivot analysis on a banking dataset.</p></div>
+        <div class="glass win tilt rv" style="--delay:60ms"><span class="tag">Semifinalist · 2026</span><h3>Breaking Brand</h3><p>Strategic brand case built on market context, consumer insights, and competitive positioning, under time pressure.</p></div>
+        <div class="glass win tilt rv"><span class="tag">Semifinalist · 2026</span><h3>Idea Hunters 5.0</h3><p>Marketing strategy for StudyIn covering student acquisition, brand positioning, and conversion.</p></div>
+        <div class="glass win tilt rv" style="--delay:60ms"><span class="tag">Semifinalist · 2026</span><h3>BIZSTAR Season V</h3><p>FMCG brand strategy covering consumer trust gaps, pricing, market positioning, and go to market.</p></div>
+      </div>
+
+      <div style="margin-top:96px">
+        <span class="eyebrow rv">Education</span>
+        <div class="glass edu rv">
+          <div class="mark" aria-hidden="true">DU</div>
+          <div>
+            <h3>Bachelor of Business Administration (BBA)</h3>
+            <p>University of Dhaka · Management Information Systems (MIS) · Dhaka, Bangladesh</p>
+            <p class="mono" style="font-size:13px;color:var(--acid);margin-top:10px">Expected October 2028</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:96px">
+        <span class="eyebrow rv">Certifications</span>
+        <h2 class="h2 rv" style="font-size:clamp(30px,4vw,52px)">Continuous upskilling.</h2>
+        <div class="certs">
+          <div class="glass cert tilt rv"><div class="who">IBM · AI and GenAI</div><h3>Generative AI: Introduction and Applications</h3><span class="yr">2026</span></div>
+          <div class="glass cert tilt rv" style="--delay:60ms"><div class="who">Google · AI and GenAI</div><h3>GenAI: Beyond the Chatbot</h3><span class="yr">2026</span></div>
+          <div class="glass cert tilt rv" style="--delay:120ms"><div class="who">IBM · AI and GenAI</div><h3>GenAI for Executives and Business Leaders: An Introduction</h3><span class="yr">2026</span></div>
+          <div class="glass cert tilt rv"><div class="who">Google · Education</div><h3>Google Certified Educator, Levels 1 and 2</h3><span class="yr">2026</span></div>
+          <div class="glass cert tilt rv" style="--delay:60ms"><div class="who">Google · Education</div><h3>Gemini Certified Educator</h3><span class="yr">2025</span></div>
+          <div class="glass cert tilt rv" style="--delay:120ms"><div class="who">National Skill Development Authority</div><h3>Digital Marketing for Freelancing, Level 3</h3><span class="yr">2025</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section class="scene" id="skills" data-shape="skills">
+    <div class="panel">
+      <span class="eyebrow rv">Skills</span>
+      <h2 class="h2 rv">Categorized skills.</h2>
+      <div class="skills">
+        <div class="glass skill-block rv"><h3>AI and quality</h3><div class="chips"><span class="chip">AI training and evaluation</span><span class="chip">AI output evaluation</span><span class="chip">Content quality assurance</span><span class="chip">Data annotation</span><span class="chip">Error identification</span><span class="chip">Instruction following</span></div></div>
+        <div class="glass skill-block rv" style="--delay:60ms"><h3>Research and analysis</h3><div class="chips"><span class="chip">Market research</span><span class="chip">Competitive analysis</span><span class="chip">Business analysis</span><span class="chip">Critical thinking</span><span class="chip">Evidence based research</span></div></div>
+        <div class="glass skill-block rv"><h3>Language and content</h3><div class="chips"><span class="chip">Bengali language quality</span><span class="chip">Proofreading</span><span class="chip">Content editing</span><span class="chip">Grammar and fluency review</span><span class="chip">Quality feedback</span></div></div>
+        <div class="glass skill-block rv" style="--delay:60ms"><h3>Tools</h3><div class="chips"><span class="chip">Microsoft Excel</span><span class="chip">Google Workspace</span><span class="chip">ChatGPT and AI tools</span><span class="chip">SEO and performance marketing</span><span class="chip">SEMrush</span><span class="chip">Moz</span><span class="chip">Keyword strategy</span><span class="chip">Canva</span><span class="chip">WordPress and web operations</span></div></div>
+        <div class="glass skill-block rv"><h3>Professional skills</h3><div class="chips"><span class="chip">Communication</span><span class="chip">Attention to detail</span><span class="chip">Problem solving</span><span class="chip">Time management</span><span class="chip">Documentation</span><span class="chip">Team collaboration</span></div></div>
+        <div class="glass skill-block rv" style="--delay:60ms"><h3>Languages</h3><div class="chips"><span class="chip">Bengali, native</span><span class="chip">English, fluent · Duolingo 125 of 160 (2025)</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="scene" id="faq" data-shape="faq">
+    <div class="panel">
+      <span class="eyebrow rv">FAQ</span>
+      <h2 class="h2 rv">Questions, answered.</h2>
+      <div class="faq">
+        <details class="glass rv"><summary>Are you available now?</summary><p>Yes, for internships and permanent positions. Current contractor roles show project allocation pending, so start dates depend on project timing.</p></details>
+        <details class="glass rv"><summary>Do you work remotely?</summary><p>Most of my recent work is remote, from Dhaka, Bangladesh.</p></details>
+        <details class="glass rv"><summary>What does your AI evaluation work involve?</summary><p>Structured annotation and quality evaluation of AI outputs for accuracy, consistency, and instruction following.</p></details>
+        <details class="glass rv"><summary>Which languages do you work in?</summary><p>Bengali, my native language, and English at a fluent level. My Duolingo English Test score was 125 of 160 in 2025.</p></details>
+        <details class="glass rv"><summary>What is your academic background?</summary><p>A BBA in Management Information Systems at the University of Dhaka, expected October 2028.</p></details>
+        <details class="glass rv"><summary>What have you taught?</summary><p>Marketing frameworks, including STP, the 4Ps, and consumer behavior models, to more than 100 undergraduate students as a lecturer at UCC Group.</p></details>
+        <details class="glass rv"><summary>How do I contact you?</summary><p>By email, by phone, or by WhatsApp. The details are in the contact section below.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="scene" id="contact" data-shape="contact">
+    <div class="panel">
+      <span class="eyebrow rv">Contact</span>
+      <h2 class="h2 rv">Let's build something.</h2>
+      <div class="contact-grid">
+        <div class="rv">
+          <p class="lead">Open to internships, marketing and research roles, and AI evaluation work.</p>
+          <p class="body" style="margin-top:16px">Whether it is a case study, a teaching engagement, or a business problem worth solving, reach out directly.</p>
+          <p class="mono" style="font-size:12px;color:var(--muted);margin-top:20px">No sign up needed. The resume opens as a PDF in one click.</p>
+        </div>
+        <div class="rv" style="--delay:120ms">
+          <div class="links glass" style="padding:8px;border-radius:24px">
+            <a class="link magnet-soft" href="mailto:azmainadil23@gmail.com"><span class="k">EMAIL</span><span class="v">azmainadil23@gmail.com</span></a>
+            <a class="link magnet-soft" href="tel:+8801731504405"><span class="k">PHONE</span><span class="v">+880 1731 504405</span></a>
+            <a class="link magnet-soft" href="https://wa.me/8801731504405" target="_blank" rel="noopener noreferrer"><span class="k">WHATSAPP</span><span class="v">Send a message</span></a>
+          </div>
+          <div class="socials" aria-label="Social media">
+            <a class="social" href="https://www.facebook.com/az.adil.23/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 8.5h2V5.4c-.34-.05-1.5-.15-2.86-.15-2.9 0-4.64 1.72-4.64 4.88V13H7v3.2h2.5V22h3.3v-5.8H15.4L15.8 13h-3V10.5c0-1.1.3-2 2.2-2Z"/></svg></a>
+            <a class="social" href="https://www.linkedin.com/in/connect-azmain/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="9.5" width="3.2" height="10" rx=".4"/><circle cx="5.6" cy="5.6" r="1.7"/><path d="M11 19.5v-6.4c0-1.9 1.1-3.1 2.9-3.1 1.7 0 2.6 1.1 2.6 3.1v6.4"/><rect x="11" y="9.5" width="3" height="10" rx=".4"/></svg></a>
+            <a class="social" href="https://github.com/azmain-adil" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2a8.8 8.8 0 0 0-2.78 17.15c.44.08.6-.19.6-.42v-1.64c-2.45.53-2.97-1.06-2.97-1.06-.4-1-.98-1.27-.98-1.27-.8-.55.06-.54.06-.54.89.06 1.36.91 1.36.91.78 1.34 2.05.95 2.55.73.08-.57.31-.95.56-1.17-1.96-.22-4.02-.98-4.02-4.36 0-.96.34-1.75.9-2.37-.09-.22-.39-1.12.09-2.33 0 0 .74-.24 2.42.9a8.4 8.4 0 0 1 4.4 0c1.68-1.14 2.42-.9 2.42-.9.48 1.21.18 2.11.09 2.33.57.62.9 1.41.9 2.37 0 3.39-2.07 4.14-4.04 4.36.32.28.6.82.6 1.66v2.46c0 .23.15.5.6.42A8.8 8.8 0 0 0 12 3.2Z"/></svg></a>
+            <a class="social" href="https://www.instagram.com/az__adil/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true" class="stroke"><rect x="3.8" y="3.8" width="16.4" height="16.4" rx="4.5"/><circle cx="12" cy="12" r="3.6"/><circle cx="16.6" cy="7.4" r="1" fill="currentColor"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass final rv">
+        <h3>Read the full record in one document.</h3>
+        <a class="btn magnet" href="https://drive.google.com/file/d/1gYiAawbX8KiQki3qev0LGdx9UZhlo5_5/view?usp=sharing" target="_blank" rel="noopener noreferrer">
+          View resume (PDF)
+          <svg width="18" height="18" viewBox="0 0 256 256" aria-hidden="true"><path d="M160 56l56 72-56 72M216 128H40" fill="none" stroke="currentColor" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>Azmain Adil © 2026 · MIS, University of Dhaka</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fine = window.matchMedia('(hover: hover)').matches;
+
+  /* ---------- Theme ---------- */
+  function isDark() {
+    return root.dataset.theme ? root.dataset.theme !== 'light'
+      : window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  document.getElementById('theme').addEventListener('click', function () {
+    root.dataset.theme = isDark() ? 'light' : 'dark';
+  });
+  if (!root.dataset.theme || root.dataset.theme === '') root.dataset.theme = 'dark';
+
+  /* ---------- Particle field ---------- */
+  var canvas = document.getElementById('field');
+  var ctx = canvas.getContext('2d');
+  var W = 0, H = 0, DPR = 1;
+  var N = window.innerWidth < 720 ? 1100 : 2600;
+  var particles = [];
+  var cache = {};
+  var currentKey = 'hero';
+  var mx = -9999, my = -9999;
+  var t = 0;
+
+  var SHAPES = {
+    hero:    { lines: ['AZMAIN', 'ADIL.'], cy: 0.36 },
+    meet:    { lines: ['MEET'], cy: 0.5 },
+    about:   { lines: ['ABOUT'], cy: 0.5 },
+    work:    { lines: ['WORK'], cy: 0.5 },
+    wins:    { lines: ['WINS'], cy: 0.5 },
+    skills:  { lines: ['SKILLS'], cy: 0.5 },
+    faq:     { lines: ['ASK'], cy: 0.5 },
+    contact: { lines: ['HELLO'], cy: 0.5 }
+  };
+
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = W * DPR; canvas.height = H * DPR;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    cache = {};
+    if (particles.length) assign(currentKey, true);
+  }
+
+  function sampleShape(key) {
+    var s = SHAPES[key];
+    var off = document.createElement('canvas');
+    off.width = W; off.height = H;
+    var o = off.getContext('2d', { willReadFrequently: true });
+    o.font = '600 400px Geist, Arial, sans-serif';
+    var maxW = 0;
+    s.lines.forEach(function (l) { maxW = Math.max(maxW, o.measureText(l).width); });
+    var lh = 0.92;
+    var size = Math.min((W * 0.86) / maxW * 400, (H * 0.5) / (s.lines.length * lh));
+    o.font = '600 ' + size + 'px Geist, Arial, sans-serif';
+    o.textAlign = 'center'; o.textBaseline = 'middle'; o.fillStyle = '#fff';
+    var total = (s.lines.length - 1) * size * lh;
+    var cy = H * s.cy;
+    s.lines.forEach(function (l, i) { o.fillText(l, W / 2, cy - total / 2 + i * size * lh); });
+    var data = o.getImageData(0, 0, W, H).data;
+    var step = Math.max(3, Math.round(Math.sqrt((W * H) / (N * 1.4))));
+    var pts = [];
+    for (var y = 0; y < H; y += step) {
+      for (var x = 0; x < W; x += step) {
+        if (data[(y * W + x) * 4 + 3] > 128) pts.push([x, y]);
+      }
+    }
+    if (!pts.length) {
+      for (var i = 0; i < N; i++) {
+        var a = (i / N) * Math.PI * 2;
+        pts.push([W / 2 + Math.cos(a) * W * 0.25, H * s.cy + Math.sin(a) * H * 0.2]);
+      }
+    }
+    return pts;
+  }
+
+  function assign(key, instant) {
+    currentKey = key;
+    if (!cache[key]) cache[key] = sampleShape(key);
+    var pts = cache[key].slice();
+    for (var i = pts.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = pts[i]; pts[i] = pts[j]; pts[j] = tmp;
+    }
+    for (var k = 0; k < particles.length; k++) {
+      var p = particles[k];
+      var q = pts[k % pts.length];
+      p.tx = q[0] + (Math.random() - 0.5) * 3;
+      p.ty = q[1] + (Math.random() - 0.5) * 3;
+      if (instant) { p.x = p.tx; p.y = p.ty; p.vx = 0; p.vy = 0; }
+    }
+  }
+
+  function initParticles() {
+    particles = [];
+    for (var i = 0; i < N; i++) {
+      particles.push({
+        x: Math.random() * W, y: Math.random() * H, vx: 0, vy: 0,
+        tx: 0, ty: 0, ph: Math.random() * Math.PI * 2,
+        s: 1.1 + Math.random() * 1.6,
+        h: Math.random() < 0.82 ? 232 + Math.random() * 60 : 78 + Math.random() * 16
+      });
+    }
+  }
+
+  function draw() {
+    t += 0.016;
+    var dark = isDark();
+    ctx.clearRect(0, 0, W, H);
+    var R = 130;
+    for (var i = 0; i < particles.length; i++) {
+      var p = particles[i];
+      var wx = Math.sin(t * 1.4 + p.ph) * 5 + Math.cos(t * 0.6 + p.ph * 2.1) * 3;
+      var wy = Math.cos(t * 1.2 + p.ph * 1.7) * 5 + Math.sin(t * 0.7 + p.ph) * 3;
+      var gx = p.tx + wx, gy = p.ty + wy;
+      p.vx += (gx - p.x) * 0.05;
+      p.vy += (gy - p.y) * 0.05;
+      var dx = p.x - mx, dy = p.y - my;
+      var d2 = dx * dx + dy * dy;
+      if (d2 < R * R) {
+        var d = Math.sqrt(d2) || 1;
+        var f = (1 - d / R) * 2.6;
+        p.vx += (dx / d) * f;
+        p.vy += (dy / d) * f;
+      }
+      p.vx *= 0.84; p.vy *= 0.84;
+      p.x += p.vx; p.y += p.vy;
+      var sp = Math.abs(p.vx) + Math.abs(p.vy);
+      var a = Math.min(1, 0.45 + sp * 0.12);
+      ctx.fillStyle = dark
+        ? 'hsla(' + p.h.toFixed(0) + ',90%,70%,' + a.toFixed(2) + ')'
+        : 'hsla(' + p.h.toFixed(0) + ',70%,42%,' + (a * 0.85).toFixed(2) + ')';
+      ctx.fillRect(p.x, p.y, p.s, p.s);
+    }
+  }
+
+  var rafId = 0;
+  function loop() { draw(); rafId = requestAnimationFrame(loop); }
+
+  /* ---------- Scroll-driven state ---------- */
+  var progress = document.getElementById('progress');
+  var railFill = document.getElementById('railFill');
+  var timeline = document.getElementById('timeline');
+  var scenes = Array.prototype.slice.call(document.querySelectorAll('[data-shape]'));
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav a[href^="#"]'));
+  var queued = false;
+
+  function onScroll() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(sync);
+  }
+  function sync() {
+    queued = false;
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.transform = 'scaleX(' + (max > 0 ? window.scrollY / max : 0).toFixed(4) + ')';
+
+    // morph the particle field to whichever scene owns the middle of the viewport
+    var mid = window.innerHeight * 0.5;
+    for (var i = 0; i < scenes.length; i++) {
+      var r = scenes[i].getBoundingClientRect();
+      if (r.top <= mid && r.bottom >= mid) {
+        var key = scenes[i].dataset.shape;
+        if (key !== currentKey && SHAPES[key]) assign(key, false);
+        break;
+      }
+    }
+
+    // timeline rail fills as you move through the jobs
+    if (timeline) {
+      var tr = timeline.getBoundingClientRect();
+      var pct = (window.innerHeight * 0.7 - tr.top) / tr.height;
+      railFill.style.transform = 'scaleY(' + Math.min(1, Math.max(0, pct)).toFixed(4) + ')';
+      Array.prototype.forEach.call(timeline.querySelectorAll('.job'), function (job) {
+        var jr = job.getBoundingClientRect();
+        job.classList.toggle('live', jr.top < window.innerHeight * 0.6);
+      });
+    }
+
+    // highlight the word of the tagline the moment it is reached
+    var line = window.innerHeight * 0.66;
+    spans.forEach(function (s, idx) {
+      if (!s.classList.contains('on') && s.getBoundingClientRect().top < line) {
+        s.classList.add('on');
+        if (idx % 7 === 3) s.classList.add('hl');
+      }
+    });
+
+    // nav current indicator
+    navLinks.forEach(function (l) { l.removeAttribute('aria-current'); });
+    for (var j = 0; j < scenes.length; j++) {
+      var rr = scenes[j].getBoundingClientRect();
+      if (rr.top <= mid && rr.bottom >= mid && scenes[j].id) {
+        var link = navLinks.find(function (l) { return l.getAttribute('href') === '#' + scenes[j].id; });
+        if (link) link.setAttribute('aria-current', 'true');
+        break;
+      }
+    }
+  }
+
+  /* ---------- Tagline words ---------- */
+  var tagline = document.getElementById('tagline');
+  var tWords = tagline.textContent.trim().split(/\s+/);
+  tagline.textContent = '';
+  tWords.forEach(function (w, i) {
+    var s = document.createElement('span');
+    s.className = 'word';
+    s.textContent = w;
+    tagline.appendChild(s);
+    if (i < tWords.length - 1) tagline.appendChild(document.createTextNode(' '));
+  });
+  var spans = Array.prototype.slice.call(tagline.querySelectorAll('.word'));
+  if (reduce) spans.forEach(function (s) { s.classList.add('on'); });
+
+  /* ---------- Rotating roles in the hero ---------- */
+  var roles = ['Marketing', 'Market research', 'AI output evaluation', 'Bengali language quality', 'Business case strategy'];
+  var roleEl = document.getElementById('role');
+  if (reduce) {
+    roleEl.textContent = roles[0];
+  } else {
+    var ri = 0, ci = 0, deleting = false;
+    (function type() {
+      var word = roles[ri];
+      if (!deleting) {
+        ci++;
+        roleEl.textContent = word.slice(0, ci);
+        if (ci === word.length) { deleting = true; return setTimeout(type, 1600); }
+        return setTimeout(type, 70);
+      }
+      ci--;
+      roleEl.textContent = word.slice(0, ci);
+      if (ci === 0) { deleting = false; ri = (ri + 1) % roles.length; return setTimeout(type, 350); }
+      setTimeout(type, 36);
+    })();
+  }
+
+  /* ---------- Count-up stats ---------- */
+  function countUp(el) {
+    var end = parseFloat(el.dataset.count), suffix = el.dataset.suffix || '';
+    var start = performance.now(), dur = 1600;
+    (function step(now) {
+      var k = Math.min(1, (now - start) / dur);
+      var eased = 1 - Math.pow(1 - k, 4);
+      el.textContent = Math.round(end * eased) + suffix;
+      if (k < 1) requestAnimationFrame(step);
+    })(start);
+  }
+  var statIO = new IntersectionObserver(function (entries, obs) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { countUp(e.target); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.6 });
+  document.querySelectorAll('[data-count]').forEach(function (el) {
+    if (reduce) el.textContent = el.dataset.count + (el.dataset.suffix || '');
+    else statIO.observe(el);
+  });
+
+  /* ---------- Reveals ---------- */
+  var rvIO = new IntersectionObserver(function (entries, obs) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
+  document.querySelectorAll('.rv').forEach(function (el) {
+    if (!el.classList.contains('in')) rvIO.observe(el);
+  });
+
+  /* ---------- Tilt cards ---------- */
+  if (fine && !reduce) {
+    document.querySelectorAll('.tilt').forEach(function (card) {
+      card.addEventListener('pointermove', function (e) {
+        var r = card.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        card.style.transform = 'perspective(900px) rotateX(' + ((y - 0.5) * -10).toFixed(2) + 'deg) rotateY(' + ((x - 0.5) * 12).toFixed(2) + 'deg) translateZ(0)';
+      });
+      card.addEventListener('pointerleave', function () { card.style.transform = ''; });
+    });
+
+    /* ---------- Magnetic buttons ---------- */
+    document.querySelectorAll('.magnet').forEach(function (el) {
+      el.addEventListener('pointermove', function (e) {
+        var r = el.getBoundingClientRect();
+        var dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+        el.style.transform = 'translate(' + (dx * 0.25).toFixed(1) + 'px,' + (dy * 0.35).toFixed(1) + 'px)';
+      });
+      el.addEventListener('pointerleave', function () { el.style.transform = ''; });
+    });
+
+    /* ---------- Pointer glow and particle repulsion ---------- */
+    var glow = document.getElementById('glow');
+    window.addEventListener('pointermove', function (e) {
+      mx = e.clientX; my = e.clientY;
+      glow.style.transform = 'translate(' + e.clientX + 'px,' + e.clientY + 'px)';
+    }, { passive: true });
+    document.addEventListener('pointerout', function (e) {
+      if (!e.relatedTarget) { mx = -9999; my = -9999; }
+    });
+  }
+
+  /* ---------- Boot ---------- */
+  window.addEventListener('scroll', onScroll, { passive: true });
+  var rz;
+  window.addEventListener('resize', function () {
+    clearTimeout(rz);
+    rz = setTimeout(function () { resize(); onScroll(); }, 150);
+  });
+
+  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(function () {
+    initParticles();
+    resize();
+    assign('hero', true);
+    if (reduce) { draw(); } else { loop(); }
+    onScroll();
+  });
+})();
+</script>
+
+</body>
+</html>
